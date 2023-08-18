@@ -48,7 +48,7 @@ $pw = $_SESSION['password'];
             <div class="dot-spinner__dot"></div>
         </div>
     </div>
-    <nav class="navbar navbar-dark bg-dark shadow">
+    <nav class="navbar navbar-dark bg-dark shadow-sm">
         <div class="container-fluid">
             <div class=" dropdown">
                 <button class="navbar-toggler" type="button" id="navbarDropdownToggle" data-bs-toggle="dropdown" aria-expanded="false">

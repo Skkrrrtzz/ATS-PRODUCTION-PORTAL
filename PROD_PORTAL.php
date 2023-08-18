@@ -499,7 +499,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header bg-primary-subtle">
-                    <h5 class="modal-title text-center" id="CableModal">CABLE WIP</h5>
+                    <h5 class="modal-title text-center" id="CableModal">CABLE WORK IN PROGRESS</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -586,7 +586,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header bg-primary-subtle">
-                    <h5 class="modal-title text-center" id="MainModal">MAIN WIP</h5>
+                    <h5 class="modal-title text-center" id="MainModal">MAIN WORK IN PROGRESS</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
