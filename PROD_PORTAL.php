@@ -121,7 +121,7 @@
                     </div>
                 </div>
                 <div class="col-sm-6 p-2">
-                    <div class="card">
+                    <div class="card shadow">
                         <div class="card-header bg-primary-subtle">
                             <h5 class="fw-bold " type="button" data-bs-toggle="modal" data-bs-target="#AllAttendance"> Attendance Rate <i class="fas fa-info-circle"></i></h5>
                         </div>
@@ -138,7 +138,7 @@
                     </div>
                 </div>
                 <div class="col-sm-6 p-2">
-                    <div class="card">
+                    <div class="card shadow">
                         <div class="card-header bg-primary-subtle">
                             <h5 class="fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#"> Efficiency Rate <i class="fas fa-info-circle"></i></h5>
                         </div>
@@ -166,7 +166,7 @@
                     </div>
                 </div> -->
                 <div class="col-sm-6 p-2 h-100">
-                    <div class="card">
+                    <div class="card shadow">
                         <div class="card-header bg-primary-subtle">
                             <!-- Button trigger modal -->
                             <h5 class="fw-bold text-center" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Lead Time <i class="fas fa-info-circle"></i></h5>
@@ -180,7 +180,7 @@
                     </div>
                 </div>
                 <div class="col-sm-6 p-2">
-                    <div class="card">
+                    <div class="card shadow">
                         <div class="card-header bg-primary-subtle">
                             <a class="no-underline text-dark" href="Generate Reports/module_build_status.php">
                                 <h5 class="fw-bold text-center">Build Status <i class="fas fa-info-circle"></i></h5>
@@ -200,7 +200,7 @@
             <div class="container-fluid m-2 mx-0" id="WIP">
                 <div class="row">
                     <div class="col-sm">
-                        <div class="card">
+                        <div class="card shadow">
                             <div class="card-header bg-primary-subtle">
                                 <!-- <a class="no-underline text-dark" href="Generate Reports/cable_wip.php?linkTitle=CABLE">
                                     <h5 class="fw-bold text-start fs-4 "><i class="fa-solid fa-bars-progress"></i> CABLE</h5>
@@ -217,7 +217,7 @@
                         </div>
                     </div>
                     <div class="col-sm">
-                        <div class="card">
+                        <div class="card shadow">
                             <div class="card-header bg-primary-subtle">
                                 <!-- <a class="no-underline text-dark" href="Generate Reports/module_wip.php?linkTitle=MAIN">
                                     <h5 class=" fw-bold text-start fs-4 "><i class=" fa-solid fa-bars-progress"></i> MAIN</h5>
@@ -236,7 +236,7 @@
             </div>
             <div class="container-fluid m-2 mx-0">
                 <div class="col-sm col-md p-1">
-                    <div class="card bg-light">
+                    <div class="card shadow bg-light">
                         <div class="card-header bg-primary-subtle">
                             <!-- Button trigger modal -->
                             <h4 class="fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#MainMatrixModal">Main Production Skill <i class="fas fa-info-circle"></i></h4>
@@ -249,7 +249,7 @@
                     </div>
                 </div>
                 <div class="col-sm col-md p-1">
-                    <div class="card bg-light">
+                    <div class="card shadow bg-light">
                         <div class="card-header bg-primary-subtle">
                             <!-- Button trigger modal -->
                             <h4 class="fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#CableMatrixModal">Cable Production Skill <i class="fas fa-info-circle"></i></h4>
