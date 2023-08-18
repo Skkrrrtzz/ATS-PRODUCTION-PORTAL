@@ -339,7 +339,7 @@
         }
     </script>
 
-    <script>
+    <!-- <script>
         const ctx1 = document.getElementById("eff_chart").getContext("2d");
         const chart1 = new Chart(ctx1, {
             type: 'bar',
@@ -430,8 +430,103 @@
                 }
             }
         });
-    </script>
+    </script> -->
+    <script>
+        const recordDates = <?php echo json_encode(array_column($efficiencyData, 'record_date')); ?>;
+        const operatorEfficiency = <?php echo json_encode(array_column($efficiencyData, 'operator_efficiency')); ?>;
+        const technicianEfficiency = <?php echo json_encode(array_column($efficiencyData, 'technician_efficiency')); ?>;
 
+        const ctx1 = document.getElementById("eff_chart").getContext("2d");
+        const chart1 = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: recordDates,
+                datasets: [{
+                        label: 'Cable Efficiency',
+                        data: operatorEfficiency,
+                        backgroundColor: 'rgba(255, 177, 193)',
+                        borderColor: 'rgba(255, 99, 132, 255)',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Main Efficiency',
+                        data: technicianEfficiency,
+                        backgroundColor: 'rgba(154, 208, 245, 255)',
+                        borderColor: 'rgba(65, 167, 236, 255)',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: 'black',
+                            font: {
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.y + '%';
+                            }
+                        }
+                    },
+                    annotation: {
+                        annotations: {
+                            targetLine: {
+                                type: 'line',
+                                yMin: 96, // Target attendance rate (96%)
+                                yMax: 96, // Target attendance rate (96%)
+                                borderColor: 'rgba(255, 174, 66)',
+                                borderWidth: 2,
+                                label: {
+                                    enabled: true,
+                                    content: 'Target: 96%', // The label content
+                                    position: 'end', // Position of the label relative to the target line (start, center, end)
+                                },
+                            },
+                        },
+                    }
+                },
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        // Add event listener to handle click on the chart
+        document.getElementById('eff_chart').addEventListener('click', function(event) {
+            const activePoints1 = chart1.getElementsAtEventForMode(event, 'nearest', {
+                intersect: true
+            }, true);
+            if (activePoints1.length > 0) {
+                const clickedDatasetIndex1 = activePoints1[0].datasetIndex;
+                const clickedIndex1 = activePoints1[0].index;
+
+                // Perform action based on the clicked dataset and index
+                if (clickedDatasetIndex1 === 0 && clickedIndex1 === 0) {
+                    // Bar for dataset 'Cable' and index 0 was clicked
+                    window.location.href = 'Generate Reports/cable_efficiency_summary.php?linkTitle=CABLE EFFICIENCY SUMMARY';
+                } else if (clickedDatasetIndex1 === 1 && clickedIndex1 === 0) {
+                    // Bar for dataset 'Main' and index 0 was clicked
+                    window.location.href = 'Generate Reports/Main_Efficiency_Summary.php?linkTitle=MAIN EFFICIENCY SUMMARY';
+                }
+            }
+        });
+    </script>
     <script>
         var batchNumbers = <?php echo json_encode($batchNumbers); ?>;
         var noDays = <?php echo json_encode($noDays); ?>;
@@ -466,8 +561,8 @@
                 }]
             },
             options: {
-                maintainAspectRatio: true,
                 responsive: true,
+                // maintainAspectRatio: false,
                 indexAxis: 'y',
                 scales: {
                     y: {
@@ -523,6 +618,8 @@
                 }, ]
             },
             options: {
+                responsive: true,
+                // maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -659,6 +756,7 @@
                     }
                 },
                 responsive: true,
+                // maintainAspectRatio: false,
                 scales: {
                     x: {
                         stacked: true,

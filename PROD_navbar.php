@@ -61,7 +61,6 @@ $pw = $_SESSION['password'];
                     <?php } ?>
                     <?php if ($selectedLinkTitle !== 'Home' && $selectedLinkTitle !== 'Torque Monitoring' && $selectedLinkTitle !== 'PRCO') { ?>
                         <li><a class="dropdown-item" href="/ATS/ATSPROD_PORTAL/PROD_PORTAL.php?linkTitle=Dashboard" onclick="showLoader()"><i class="bi bi-columns-gap"></i> Dashboard</a></li>
-                        <li><a class="dropdown-item" href="/ATS/ATSPROD_PORTAL/Carousel.php?linkTitle=Updates" onclick="showLoader()"><i class="bi bi-columns-gap"></i> Updates</a></li>
                         <li><a class="dropdown-item" href="/ATS/ATSPROD_PORTAL/Generate Reports/PROD_cable_dashboard.php?linkTitle=Cable Dashboard"><i class="bi bi-grid-1x2-fill"></i> Cable Dashboard</a></li>
                         <li><a class="dropdown-item" href="/ATS/ATSPROD_PORTAL/Generate Reports/PROD_main_dashboard.php?linkTitle=Module Dashboard"><i class="bi bi-grid-1x2-fill"></i> Module Dashboard</a></li>
                         <li><a class="dropdown-item" href="/ATS/ATSPROD_PORTAL/PROD_reports.php?linkTitle=Generate Reports"><i class="fa fa-list"></i> Generate Reports</a></li>

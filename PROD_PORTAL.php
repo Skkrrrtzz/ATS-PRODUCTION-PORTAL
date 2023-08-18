@@ -103,7 +103,6 @@
 </head>
 
 <body class="bg-dark-subtle">
-
     <div class="row g-0 text-center" id="dashboard">
         <div class="col-sm-6 col-md-8 bg-dark-subtle">
             <div class="row m-1">
@@ -144,7 +143,7 @@
                             <h5 class="fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#"> Efficiency Rate <i class="fas fa-info-circle"></i></h5>
                         </div>
                         <div class="card-body">
-                            <h4><i class="fa fa-line-chart"></i><?php echo $ALL_EFF . "%"; ?></h4>
+                            <h4><i class="fa fa-line-chart"></i>Today: <?php echo $ALL_EFF . "%"; ?></h4>
                             <div class="chart-container">
                                 <input type="checkbox" id="toggleWeekly" />
                                 <label for="toggleWeekly">Weekly</label>
@@ -153,10 +152,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm col-sm-4 p-2">
+                <!-- <div class="col-sm col-sm-4 p-2">
                     <div class="card">
                         <div class="card-header bg-primary-subtle">
-                            <!-- Button trigger modal -->
                             <h5 class="fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Production Yield <i class="fas fa-info-circle"></i></h5>
                         </div>
                         <div class="card-body">
@@ -166,32 +164,32 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm col-sm-4 p-2">
+                </div> -->
+                <div class="col-sm-6 p-2 h-100">
                     <div class="card">
                         <div class="card-header bg-primary-subtle">
                             <!-- Button trigger modal -->
-                            <h5 class="fw-bold text-center fs-6" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Lead Time <i class="fas fa-info-circle"></i></h5>
+                            <h5 class="fw-bold text-center" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Lead Time <i class="fas fa-info-circle"></i></h5>
                         </div>
                         <div class="card-body">
                             <!-- <h4><i class="fa-solid fa-clock"></i></h4> -->
                             <div class="chart-container">
-                                <canvas id="Leadtime"></canvas>
+                                <canvas id="Leadtime" height="180px"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm col-sm-4 p-2">
+                <div class="col-sm-6 p-2">
                     <div class="card">
                         <div class="card-header bg-primary-subtle">
                             <a class="no-underline text-dark" href="Generate Reports/module_build_status.php">
-                                <h5 class="fw-bold text-center fs-6 ">Build Status <i class="fas fa-info-circle"></i></h5>
+                                <h5 class="fw-bold text-center">Build Status <i class="fas fa-info-circle"></i></h5>
                             </a>
                         </div>
                         <div class="card-body">
                             <!-- <h4><i class="fa-solid fa-bars-progress"></i></h4> -->
                             <div class="chart-container">
-                                <canvas id="buildStatusChart"></canvas>
+                                <canvas id="buildStatusChart" height="180px"></canvas>
                             </div>
                         </div>
                     </div>
@@ -201,7 +199,7 @@
         <div class="col-sm col-md-4 bg-dark-subtle">
             <div class="container-fluid m-2 mx-0" id="WIP">
                 <div class="row">
-                    <div class="col">
+                    <div class="col-sm">
                         <div class="card">
                             <div class="card-header bg-primary-subtle">
                                 <!-- <a class="no-underline text-dark" href="Generate Reports/cable_wip.php?linkTitle=CABLE">
@@ -237,7 +235,7 @@
                 </div>
             </div>
             <div class="container-fluid m-2 mx-0">
-                <div class="col-sm">
+                <div class="col-sm col-md p-1">
                     <div class="card bg-light">
                         <div class="card-header bg-primary-subtle">
                             <!-- Button trigger modal -->
@@ -245,12 +243,12 @@
                         </div>
                         <div class="card-body">
                             <div class="chart-container">
-                                <canvas id="skill_matrix_main"></canvas>
+                                <canvas id="skill_matrix_main" height="180px"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm">
+                <div class="col-sm col-md p-1">
                     <div class="card bg-light">
                         <div class="card-header bg-primary-subtle">
                             <!-- Button trigger modal -->
@@ -258,7 +256,7 @@
                         </div>
                         <div class="card-body">
                             <div class="chart-container">
-                                <canvas id="skill_matrix_cable"></canvas>
+                                <canvas id="skill_matrix_cable" height="180px"></canvas>
                             </div>
                         </div>
                     </div>

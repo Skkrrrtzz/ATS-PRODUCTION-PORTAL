@@ -334,6 +334,33 @@ if (isset($_GET['date']) && $_GET['date'] != $defaultDate) {
   $date = $_GET['date']; // Assign the selected date
 }
 
+function getEfficiency($conn)
+{
+
+  $cable_efficiency = "SELECT record_date,operator_efficiency,technician_efficiency FROM efficiency_records WHERE WEEK(record_date) = WEEK(NOW()) AND DAYOFWEEK(record_date) BETWEEN 2 AND 6";
+
+  //(WEEK(record_date) = WEEK(NOW()) OR WEEK(record_date) = WEEK(NOW()) - 1) AND DAYOFWEEK(record_date) BETWEEN 2 AND 6 --> IF LASTWEEK AND WEEKNOW
+  // Execute the query
+  $result = mysqli_query($conn, $cable_efficiency);
+
+  // Check if the query was successful
+  if (!$result) {
+    die("Query failed: " . mysqli_error($conn));
+  }
+
+  // Fetch the data and store in an array
+  $dataArray = array();
+  while ($row = mysqli_fetch_assoc($result)) {
+    $dataArray[] = array(
+      "record_date" => $row['record_date'],
+      "operator_efficiency" => $row['operator_efficiency'],
+      "technician_efficiency" => $row['technician_efficiency']
+    );
+  }
+  // Output the JSON data
+  return $dataArray;
+}
+$efficiencyData = getEfficiency($conn);
 function getWeeklyDates($startDate)
 {
   $weeklyDates = [];
