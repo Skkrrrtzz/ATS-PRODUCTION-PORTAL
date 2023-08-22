@@ -107,7 +107,7 @@ $all_attendance_format = "";
                                 <?php
 
                                 // Run the query to get the list of names
-                                $name_result = mysqli_query($conn, "SELECT user_ID,emp_name FROM user WHERE department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394','13351','5555') group by emp_name order by emp_name");
+                                $name_result = mysqli_query($conn, "SELECT user_ID,emp_name FROM user WHERE department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394','13351','5555','12379') group by emp_name order by emp_name");
                                 $total_headcount = mysqli_num_rows($name_result);
                                 // Initialize a variable to hold the total actual time for all names
                                 $total_actual_time_all_names = 0;
@@ -142,7 +142,7 @@ $all_attendance_format = "";
                                         $all_attendance_format = "0";
                                     }
                                     // GET THE DATA FOR STANDARD TIME 
-                                    $sql_result = mysqli_query($conn, "SELECT dtr.Name,dtr.DATE,dtr.Duration AS total_actual_time,dtr.Qty_Make,dtr.Duration/dtr.Qty_Make AS detailed_total_act,dtr.wo_id,dtr.Part_No,dtr.Prod_Order_No,cable_cycletime.cycle_time,(CASE WHEN dtr.Duration/dtr.Qty_Make < cable_cycletime.cycle_time THEN dtr.Duration/dtr.Qty_Make ELSE cable_cycletime.cycle_time END) AS Std_time FROM (SELECT Name,DATE,SUM(Duration) AS Duration,Qty_Make,wo_id,Part_No,Stations,Code,Station_No,Labor_Type,Act_Start,Prod_Order_No FROM dtr WHERE DATE BETWEEN '$datefrom' and '$dateto' AND Name = '$name' AND Emp_ID NOT IN ('13394','13351') AND Qty_Make > 0 AND wo_status = 'IN-PROCESS' AND Stations!='FG TRANSACTION' AND Labor_Type='Reg_DL' AND Department = 'Cable Assy' GROUP BY Name, Prod_Order_No,Stations) AS dtr LEFT JOIN cable_cycletime ON dtr.Part_No = cable_cycletime.Part_No AND cable_cycletime.station=dtr.Stations GROUP BY dtr.Name, dtr.Prod_Order_No,dtr.Stations ORDER BY dtr.Name, dtr.Act_Start ASC");
+                                    $sql_result = mysqli_query($conn, "SELECT dtr.Name,dtr.DATE,dtr.Duration AS total_actual_time,dtr.Qty_Make,dtr.Duration/dtr.Qty_Make AS detailed_total_act,dtr.wo_id,dtr.Part_No,dtr.Prod_Order_No,cable_cycletime.cycle_time,(CASE WHEN dtr.Duration/dtr.Qty_Make < cable_cycletime.cycle_time THEN dtr.Duration/dtr.Qty_Make ELSE cable_cycletime.cycle_time END) AS Std_time FROM (SELECT Name,DATE,SUM(Duration) AS Duration,Qty_Make,wo_id,Part_No,Stations,Code,Station_No,Labor_Type,Act_Start,Prod_Order_No FROM dtr WHERE DATE BETWEEN '$datefrom' and '$dateto' AND Name = '$name' AND Emp_ID NOT IN ('13394','13351','12379') AND Qty_Make > 0 AND wo_status = 'IN-PROCESS' AND Stations!='FG TRANSACTION' AND Labor_Type='Reg_DL' AND Department = 'Cable Assy' GROUP BY Name, Prod_Order_No,Stations) AS dtr LEFT JOIN cable_cycletime ON dtr.Part_No = cable_cycletime.Part_No AND cable_cycletime.station=dtr.Stations GROUP BY dtr.Name, dtr.Prod_Order_No,dtr.Stations ORDER BY dtr.Name, dtr.Act_Start ASC");
 
 
 
@@ -258,7 +258,7 @@ $all_attendance_format = "";
                                 </tr>
                             </thead>
                         <?php }
-                    $wosql_data = mysqli_query($conn, "SELECT Name,wo_id,Qty_Make,Stations,Part_No,Activity,Duration,remarks,SUM(Duration) AS TOTALD,Name,Prod_Order_No,Station_No,Code,Act_Start,Act_End FROM dtr WHERE DATE BETWEEN '$datefrom' and '$dateto' AND Qty_Make > 0 AND wo_status = 'IN-PROCESS' AND Stations!='FG TRANSACTION' AND Labor_Type='Reg_DL' AND Emp_ID NOT IN ('13394','13351') AND Department='$Dept' AND Duration!='' GROUP BY Name,Prod_Order_No,Stations ORDER BY Name,Act_Start asc");
+                    $wosql_data = mysqli_query($conn, "SELECT Name,wo_id,Qty_Make,Stations,Part_No,Activity,Duration,remarks,SUM(Duration) AS TOTALD,Name,Prod_Order_No,Station_No,Code,Act_Start,Act_End FROM dtr WHERE DATE BETWEEN '$datefrom' and '$dateto' AND Qty_Make > 0 AND wo_status = 'IN-PROCESS' AND Stations!='FG TRANSACTION' AND Labor_Type='Reg_DL' AND Emp_ID NOT IN ('13394','13351','12379') AND Department='$Dept' AND Duration!='' GROUP BY Name,Prod_Order_No,Stations ORDER BY Name,Act_Start asc");
 
                     while ($row = mysqli_fetch_array($wosql_data)) {
                         $wo_id    = $row['wo_id'];

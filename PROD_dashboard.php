@@ -19,10 +19,10 @@ function getAllAttendanceData($conn, $interval)
 
   if ($interval === 'daily') {
 
-    $totalMP_sql = mysqli_query($conn, "SELECT user_ID, emp_name, department FROM user WHERE (department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394', '13351', '5555')) OR (Department IN ('Prod Main', 'Production Main') AND username NOT IN ('4444', '13472', '947', '2023', '11742')) GROUP BY emp_name, department ORDER BY emp_name;");
+    $totalMP_sql = mysqli_query($conn, "SELECT user_ID, emp_name, department FROM user WHERE (department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394', '13351', '5555','12379')) OR (Department IN ('Prod Main', 'Production Main') AND username NOT IN ('4444', '13472', '947', '2023', '11742')) GROUP BY emp_name, department ORDER BY emp_name;");
     $total_MP = mysqli_num_rows($totalMP_sql);
 
-    $totalPresent_sql = "SELECT DATE, SUM(CASE WHEN department = 'CABLE ASSY' THEN count ELSE 0 END) AS cable_count, SUM(CASE WHEN department = 'Production Main' THEN count ELSE 0 END) AS production_count, SUM(count) AS total_count FROM ( SELECT DATE, 'CABLE ASSY' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department = 'CABLE ASSY' AND WEEK(DATE) =  WEEK(NOW()) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('5555', '13640', '13394', '13351') GROUP BY DATE UNION SELECT DATE, 'Production Main' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department IN ('Production Main', 'Prod Main') AND WEEK(DATE) =  WEEK(NOW()) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('4444', '13472', '947', '2023', '11742') GROUP BY DATE ) AS subquery GROUP BY DATE;";
+    $totalPresent_sql = "SELECT DATE, SUM(CASE WHEN department = 'CABLE ASSY' THEN count ELSE 0 END) AS cable_count, SUM(CASE WHEN department = 'Production Main' THEN count ELSE 0 END) AS production_count, SUM(count) AS total_count FROM ( SELECT DATE, 'CABLE ASSY' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department = 'CABLE ASSY' AND WEEK(DATE) =  WEEK(NOW()) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('5555', '13640', '13394', '13351','12379') GROUP BY DATE UNION SELECT DATE, 'Production Main' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department IN ('Production Main', 'Prod Main') AND WEEK(DATE) =  WEEK(NOW()) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('4444', '13472', '947', '2023', '11742') GROUP BY DATE ) AS subquery GROUP BY DATE;";
 
     $dailyData = array();
 
@@ -34,7 +34,7 @@ function getAllAttendanceData($conn, $interval)
   } elseif ($interval === 'weekly') {
     $weekNumber = date('W');
 
-    $totalMP_sql = mysqli_query($conn, "SELECT user_ID, emp_name, department FROM user WHERE (department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394', '13351', '5555')) OR (Department IN ('Prod Main', 'Production Main') AND username NOT IN ('4444', '13472', '947', '2023', '11742')) GROUP BY emp_name, department ORDER BY emp_name;");
+    $totalMP_sql = mysqli_query($conn, "SELECT user_ID, emp_name, department FROM user WHERE (department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394', '13351', '5555','12379')) OR (Department IN ('Prod Main', 'Production Main') AND username NOT IN ('4444', '13472', '947', '2023', '11742')) GROUP BY emp_name, department ORDER BY emp_name;");
     $total_MP = mysqli_num_rows($totalMP_sql);
 
     $start_date = date('Y-m-d', strtotime("2023-W$weekNumber-1")); // Get the start date (Monday) of the week
@@ -52,7 +52,7 @@ function getAllAttendanceData($conn, $interval)
       $current_date = date('Y-m-d', strtotime($current_date . ' +1 day'));
     }
 
-    $totalPresent_sql = mysqli_query($conn, "SELECT DATE, SUM(CASE WHEN department = 'CABLE ASSY' THEN count ELSE 0 END) AS cable_count, SUM(CASE WHEN department = 'Production Main' THEN count ELSE 0 END) AS production_count, SUM(count) AS total_count FROM ( SELECT DATE, 'CABLE ASSY' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department = 'CABLE ASSY'AND (WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('5555', '13640', '13394', '13351') GROUP BY DATE UNION SELECT DATE, 'Production Main' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department IN ('Production Main', 'Prod Main') AND (WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('4444', '13472', '947', '2023', '11742') GROUP BY DATE ) AS subquery GROUP BY WEEK(DATE);");
+    $totalPresent_sql = mysqli_query($conn, "SELECT DATE, SUM(CASE WHEN department = 'CABLE ASSY' THEN count ELSE 0 END) AS cable_count, SUM(CASE WHEN department = 'Production Main' THEN count ELSE 0 END) AS production_count, SUM(count) AS total_count FROM ( SELECT DATE, 'CABLE ASSY' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department = 'CABLE ASSY'AND (WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('5555', '13640', '13394', '13351','12379') GROUP BY DATE UNION SELECT DATE, 'Production Main' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department IN ('Production Main', 'Prod Main') AND (WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('4444', '13472', '947', '2023', '11742') GROUP BY DATE ) AS subquery GROUP BY WEEK(DATE);");
 
     $weeklyData = array();
 
@@ -73,7 +73,7 @@ function getAllAttendanceData($conn, $interval)
     return $weeklyData;
   } elseif ($interval === 'monthly') {
 
-    $totalMP_sql = mysqli_query($conn, "SELECT user_ID, emp_name, department FROM user WHERE (department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394', '13351', '5555')) OR (Department IN ('Prod Main', 'Production Main') AND username NOT IN ('4444', '13472', '947', '2023', '11742')) GROUP BY emp_name, department ORDER BY emp_name;");
+    $totalMP_sql = mysqli_query($conn, "SELECT user_ID, emp_name, department FROM user WHERE (department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394', '13351', '5555','12379')) OR (Department IN ('Prod Main', 'Production Main') AND username NOT IN ('4444', '13472', '947', '2023', '11742')) GROUP BY emp_name, department ORDER BY emp_name;");
     $total_MP = mysqli_num_rows($totalMP_sql);
 
     $today = date('Y-m-d');
@@ -86,7 +86,7 @@ function getAllAttendanceData($conn, $interval)
     $monthlyAttendanceRates = array();
 
     while (!$endOfYear) {
-      $totalPresent_sql = mysqli_query($conn, "SELECT COUNT(DISTINCT CASE WHEN (WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) THEN DATE END) AS present_days,SUM(CASE WHEN department = 'CABLE ASSY' THEN count ELSE 0 END) AS cable_count, SUM(CASE WHEN department = 'Production Main' THEN count ELSE 0 END) AS production_count, SUM(count) AS total_count FROM ( SELECT DATE, 'CABLE ASSY' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department = 'CABLE ASSY'AND (MONTH(DATE) = MONTH('$currentDate')) AND (WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('5555', '13640', '13394', '13351') GROUP BY DATE UNION SELECT DATE, 'Production Main' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department IN ('Production Main', 'Prod Main')AND (MONTH(DATE) = MONTH('$currentDate')) AND(WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('4444', '13472', '947', '2023', '11742') GROUP BY DATE ) AS subquery");
+      $totalPresent_sql = mysqli_query($conn, "SELECT COUNT(DISTINCT CASE WHEN (WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) THEN DATE END) AS present_days,SUM(CASE WHEN department = 'CABLE ASSY' THEN count ELSE 0 END) AS cable_count, SUM(CASE WHEN department = 'Production Main' THEN count ELSE 0 END) AS production_count, SUM(count) AS total_count FROM ( SELECT DATE, 'CABLE ASSY' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department = 'CABLE ASSY'AND (MONTH(DATE) = MONTH('$currentDate')) AND (WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('5555', '13640', '13394', '13351','12379') GROUP BY DATE UNION SELECT DATE, 'Production Main' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department IN ('Production Main', 'Prod Main')AND (MONTH(DATE) = MONTH('$currentDate')) AND(WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('4444', '13472', '947', '2023', '11742') GROUP BY DATE ) AS subquery");
 
       $attendance_count = 0;
       $row = mysqli_fetch_assoc($totalPresent_sql);
@@ -127,10 +127,10 @@ function getAttendanceData($conn, $type, $interval)
   if ($interval === 'daily') {
 
     if ($type === 'cable') {
-      $operator_sql = mysqli_query($conn, "SELECT user_ID, emp_name FROM user WHERE department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394', '13351', '5555') GROUP BY emp_name ORDER BY emp_name");
+      $operator_sql = mysqli_query($conn, "SELECT user_ID, emp_name FROM user WHERE department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394', '13351', '5555','12379') GROUP BY emp_name ORDER BY emp_name");
       $operators = mysqli_num_rows($operator_sql);
 
-      $sql = "SELECT DATE, COUNT(*) as count FROM prod_attendance WHERE Department = 'CABLE ASSY' AND WEEK(DATE)=WEEK(NOW()) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('5555', '13640', '13394', '13351') GROUP BY DATE ORDER BY DATE";
+      $sql = "SELECT DATE, COUNT(*) as count FROM prod_attendance WHERE Department = 'CABLE ASSY' AND WEEK(DATE)=WEEK(NOW()) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('5555', '13640', '13394', '13351','12379') GROUP BY DATE ORDER BY DATE";
     } elseif ($type === 'main') {
       $technician_sql = mysqli_query($conn, "SELECT user_ID, emp_name, username FROM user WHERE Department IN ('Prod Main', 'Production Main') AND username NOT IN ('4444', '13472', '947', '2023', '11742') GROUP BY emp_name ORDER BY emp_name");
       $operators = mysqli_num_rows($technician_sql);
@@ -146,10 +146,10 @@ function getAttendanceData($conn, $type, $interval)
   } elseif ($interval === 'weekly') {
 
     if ($type === 'cable') {
-      $operator_sql = mysqli_query($conn, "SELECT user_ID, emp_name FROM user WHERE department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394', '13351', '5555') GROUP BY emp_name ORDER BY emp_name");
+      $operator_sql = mysqli_query($conn, "SELECT user_ID, emp_name FROM user WHERE department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394', '13351', '5555','12379') GROUP BY emp_name ORDER BY emp_name");
       $operators = mysqli_num_rows($operator_sql);
 
-      $sql = "SELECT DATE, COUNT(*) as count FROM prod_attendance WHERE Department = 'CABLE ASSY' AND (WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('5555', '13640', '13394', '13351') GROUP BY DATE ORDER BY DATE";
+      $sql = "SELECT DATE, COUNT(*) as count FROM prod_attendance WHERE Department = 'CABLE ASSY' AND (WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('5555', '13640', '13394', '13351','12379') GROUP BY DATE ORDER BY DATE";
     } elseif ($type === 'main') {
       $technician_sql = mysqli_query($conn, "SELECT user_ID, emp_name, username FROM user WHERE Department IN ('Prod Main', 'Production Main') AND username NOT IN ('4444', '13472', '947', '2023', '11742') GROUP BY emp_name ORDER BY emp_name");
       $operators = mysqli_num_rows($technician_sql);
@@ -220,7 +220,7 @@ function fetchAttendanceData($conn, $clickedDate)
         SUM(CASE WHEN Department IN ('Prod Main', 'Production Main') THEN 1 ELSE 0 END) AS main_operators,
         SUM(CASE WHEN department = 'Cable Assy' AND role = 'operator' THEN 1 ELSE 0 END) AS cable_operators
     FROM user
-    WHERE username NOT IN ('4444', '13472', '947', '2023', '11742', '13394', '13351', '5555');";
+    WHERE username NOT IN ('4444', '13472', '947', '2023', '11742', '13394', '13351', '5555','12379');";
   $result = mysqli_query($conn, $all_users_sql);
 
   if ($result) {
@@ -231,7 +231,7 @@ function fetchAttendanceData($conn, $clickedDate)
     echo "Cannot retrieve users";
   }
 
-  $sql_cable_att = "SELECT Name, Time_In FROM prod_attendance WHERE Department='Cable Assy' AND Emp_ID NOT IN ('5555','13640') AND DATE='$clickedDate' GROUP BY Name";
+  $sql_cable_att = "SELECT Name, Time_In FROM prod_attendance WHERE Department='Cable Assy' AND Emp_ID NOT IN ('5555','13640','12379') AND DATE='$clickedDate' GROUP BY Name";
   $result_cable = mysqli_query($conn, $sql_cable_att);
   $cable_num = mysqli_num_rows($result_cable);
 
@@ -394,11 +394,11 @@ $mainYearlyData = getYearlyAttendanceData($conn, 'main');
 $technician_sql = mysqli_query($conn, "SELECT user_ID, emp_name, username FROM user WHERE Department IN ('Prod Main', 'Production Main') AND username NOT IN ('4444', '13472', '947','11742','2023') GROUP BY emp_name ORDER BY emp_name");
 $technicians = mysqli_num_rows($technician_sql);
 
-$operator_sql = mysqli_query($conn, "SELECT user_ID, emp_name FROM user WHERE department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394', '13351', '5555') GROUP BY emp_name ORDER BY emp_name");
+$operator_sql = mysqli_query($conn, "SELECT user_ID, emp_name FROM user WHERE department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394', '13351', '5555','12379') GROUP BY emp_name ORDER BY emp_name");
 $operators = mysqli_num_rows($operator_sql);
 
 // SELECT PRESENT DATA FROM prod_attendance TABLE
-$present_opr_sql = mysqli_query($conn, "SELECT * FROM `prod_attendance` WHERE Department='CABLE ASSY' AND DATE ='$date' AND Emp_ID NOT IN ('5555', '13640', '13394', '13351') ORDER BY `DATE`");
+$present_opr_sql = mysqli_query($conn, "SELECT * FROM `prod_attendance` WHERE Department='CABLE ASSY' AND DATE ='$date' AND Emp_ID NOT IN ('5555', '13640', '13394', '13351','12379') ORDER BY `DATE`");
 $present_operators = mysqli_num_rows($present_opr_sql);
 
 $present_tech_sql = mysqli_query($conn, "SELECT * FROM `prod_attendance` WHERE Department IN ('Production Main', 'Prod Main') AND DATE ='$date' AND Emp_ID NOT IN ('4444', '13472', '947','2023','11742') ORDER BY `DATE`");
@@ -414,7 +414,7 @@ function getWeeklyAttendanceData($conn, $type)
     $operator_sql = mysqli_query($conn, "SELECT user_ID,emp_name FROM user WHERE department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394','13351','5555') GROUP BY emp_name ORDER BY emp_name");
     $operators = mysqli_num_rows($operator_sql);
 
-    $weekly_sql = mysqli_query($conn, "SELECT DATE, COUNT(*) as count FROM prod_attendance WHERE Department = 'CABLE ASSY' AND WEEK(DATE) = WEEK(NOW()) AND Emp_ID NOT IN ('5555', '13640','13394', '13351') GROUP BY DATE ORDER BY DATE");
+    $weekly_sql = mysqli_query($conn, "SELECT DATE, COUNT(*) as count FROM prod_attendance WHERE Department = 'CABLE ASSY' AND WEEK(DATE) = WEEK(NOW()) AND Emp_ID NOT IN ('5555', '13640','13394', '13351','12379') GROUP BY DATE ORDER BY DATE");
   } elseif ($type === 'main') {
     $technician_sql = mysqli_query($conn, "SELECT user_ID,emp_name,username FROM user WHERE Department IN ('Prod Main','Production Main') AND username NOT IN ('4444','13472','947','2023','11742') GROUP BY emp_name ORDER BY emp_name");
     $technicians = mysqli_num_rows($technician_sql);
@@ -445,7 +445,7 @@ function getYearlyAttendanceData($conn, $type)
     $operator_sql = mysqli_query($conn, "SELECT user_ID,emp_name FROM user WHERE department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394','13351','5555') GROUP BY emp_name ORDER BY emp_name");
     $operators = mysqli_num_rows($operator_sql);
 
-    $yearly_sql = mysqli_query($conn, "SELECT DATE, COUNT(*) as count FROM prod_attendance WHERE Department = 'CABLE ASSY' AND YEAR(DATE) = YEAR(NOW()) AND Emp_ID NOT IN ('5555', '13640','13394', '13351') GROUP BY MONTH(DATE) ORDER BY MONTH(DATE)");
+    $yearly_sql = mysqli_query($conn, "SELECT DATE, COUNT(*) as count FROM prod_attendance WHERE Department = 'CABLE ASSY' AND YEAR(DATE) = YEAR(NOW()) AND Emp_ID NOT IN ('5555', '13640','13394', '13351','12379') GROUP BY MONTH(DATE) ORDER BY MONTH(DATE)");
   } elseif ($type === 'main') {
     $technician_sql = mysqli_query($conn, "SELECT user_ID,emp_name,username FROM user WHERE Department IN ('Prod Main','Production Main') AND username NOT IN ('4444','13472','947','11742') GROUP BY emp_name ORDER BY emp_name");
     $technicians = mysqli_num_rows($technician_sql);
@@ -481,7 +481,7 @@ if ($main != 0 && $cable != 0) {
 $ATT_OVERALL = round($OVERALL_ATT);
 
 // SELECT CABLE ASSY USERS FROM USER TABLE
-$sql_total_operator = mysqli_query($conn, "SELECT user_ID,emp_name FROM user WHERE department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394','13351','5555') GROUP BY emp_name ORDER BY emp_name");
+$sql_total_operator = mysqli_query($conn, "SELECT user_ID,emp_name FROM user WHERE department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394','13351','5555','12379') GROUP BY emp_name ORDER BY emp_name");
 $total_operator = mysqli_num_rows($sql_total_operator);
 
 // Initialize a variable to hold the total actual time for all names
@@ -494,7 +494,7 @@ while ($row = mysqli_fetch_array($sql_total_operator)) {
   $name = $row['emp_name'];
 
   //GET THE ACTUAL DIRECT LABOR HOURS BASED ON ACTUAL PROCESSED PART per EMPLOYEE
-  $sql_result = mysqli_query($conn, "SELECT dtr.Name,dtr.DATE,dtr.Duration AS total_actual_time,dtr.Qty_Make,dtr.Duration/dtr.Qty_Make AS detailed_total_act,dtr.wo_id,dtr.Part_No,dtr.Prod_Order_No,cable_cycletime.cycle_time,(CASE WHEN dtr.Duration/dtr.Qty_Make < cable_cycletime.cycle_time THEN dtr.Duration/dtr.Qty_Make ELSE cable_cycletime.cycle_time END) AS Std_time FROM (SELECT Name,DATE,SUM(Duration) AS Duration,Qty_Make,wo_id,Part_No,Stations,Code,Station_No,Labor_Type,Act_Start,Prod_Order_No FROM dtr WHERE DATE BETWEEN '$date' and '$date' AND Name = '$name' AND Emp_ID NOT IN ('13394','13351') AND Qty_Make > 0 AND wo_status = 'IN-PROCESS' AND Stations!='FG TRANSACTION' AND Labor_Type='Reg_DL' AND Department = 'Cable Assy' GROUP BY Name, Prod_Order_No,Stations) AS dtr LEFT JOIN cable_cycletime ON dtr.Part_No = cable_cycletime.Part_No AND cable_cycletime.station=dtr.Stations GROUP BY dtr.Name, dtr.Prod_Order_No,dtr.Stations ORDER BY dtr.Name, dtr.Act_Start ASC");
+  $sql_result = mysqli_query($conn, "SELECT dtr.Name,dtr.DATE,dtr.Duration AS total_actual_time,dtr.Qty_Make,dtr.Duration/dtr.Qty_Make AS detailed_total_act,dtr.wo_id,dtr.Part_No,dtr.Prod_Order_No,cable_cycletime.cycle_time,(CASE WHEN dtr.Duration/dtr.Qty_Make < cable_cycletime.cycle_time THEN dtr.Duration/dtr.Qty_Make ELSE cable_cycletime.cycle_time END) AS Std_time FROM (SELECT Name,DATE,SUM(Duration) AS Duration,Qty_Make,wo_id,Part_No,Stations,Code,Station_No,Labor_Type,Act_Start,Prod_Order_No FROM dtr WHERE DATE BETWEEN '$date' and '$date' AND Name = '$name' AND Emp_ID NOT IN ('13394','13351','12379') AND Qty_Make > 0 AND wo_status = 'IN-PROCESS' AND Stations!='FG TRANSACTION' AND Labor_Type='Reg_DL' AND Department = 'Cable Assy' GROUP BY Name, Prod_Order_No,Stations) AS dtr LEFT JOIN cable_cycletime ON dtr.Part_No = cable_cycletime.Part_No AND cable_cycletime.station=dtr.Stations GROUP BY dtr.Name, dtr.Prod_Order_No,dtr.Stations ORDER BY dtr.Name, dtr.Act_Start ASC");
 
   // Initialize a variable to hold the running total and detailed actual time for each Name
   $total_actual_time_by_name = 0;
