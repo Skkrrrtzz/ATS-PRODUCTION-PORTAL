@@ -58,6 +58,10 @@
             padding: 6px;
         }
 
+        .dropdown-toggle::after {
+            display: none !important;
+        }
+
         /* .chart-container {
             height: auto;
             flex: 0 0 auto;
@@ -122,16 +126,29 @@
                 </div>
                 <div class="col-sm-6 p-2">
                     <div class="card shadow">
-                        <div class="card-header bg-primary-subtle">
-                            <h5 class="fw-bold " type="button" data-bs-toggle="modal" data-bs-target="#AllAttendance"> Attendance Rate <i class="fas fa-info-circle"></i></h5>
+                        <div class="card-header bg-primary-subtle d-flex flex-row align-items-center justify-content-between">
+                            <h5 class="fw-bold"> Attendance Rate </h5>
+                            <div class="dropdown">
+                                <a class="dropdown-toggle text-dark" href="#" role="button" id="dropdownMenu1" data-bs-toggle="dropdown" data-bs-auto-close="inside" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="dropdownMenu1">
+                                    <label class="dropdown-item" for="toggleAllWeekly">
+                                        <input type="checkbox" id="toggleAllWeekly" class="form-check-input" onchange="toggleAllInterval()" />
+                                        Weekly
+                                    </label>
+                                    <label class="dropdown-item" for="toggleAllMonthly">
+                                        <input type="checkbox" id="toggleAllMonthly" class="form-check-input" onchange="toggleAllInterval()" />
+                                        Monthly
+                                    </label>
+                                    <div class="dropdown-divider"></div>
+                                    <div class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#AllAttendance">More info <i class="fas fa-info-circle"></i></div>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <h4><i class="fa fa-users"></i>Today: <?php echo $ATT_OVERALL . "%", " Absent ", $all_abs ?></h4>
                             <div class="chart-container">
-                                <input type="checkbox" id="toggleAllWeekly" onchange="toggleAllInterval()" />
-                                <label for="toggleAllWeekly">Weekly</label>
-                                <input type="checkbox" id="toggleAllMonthly" onchange="toggleAllInterval()" />
-                                <label for="toggleAllMonthly">Monthly</label>
                                 <canvas id="all_att_chart"></canvas>
                             </div>
                         </div>
@@ -139,14 +156,25 @@
                 </div>
                 <div class="col-sm-6 p-2">
                     <div class="card shadow">
-                        <div class="card-header bg-primary-subtle">
-                            <h5 class="fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#"> Efficiency Rate <i class="fas fa-info-circle"></i></h5>
+                        <div class="card-header bg-primary-subtle d-flex flex-row align-items-center justify-content-between">
+                            <h5 class="fw-bold"> Efficiency Rate </h5>
+                            <div class="dropdown">
+                                <a class="dropdown-toggle text-dark" href="#" role="button" id="dropdownMenu2" data-bs-toggle="dropdown" data-bs-auto-close="inside" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="dropdownMenu1">
+                                    <label class="dropdown-item" for="toggleWeeklyEff">
+                                        <input type="checkbox" id="toggleWeeklyEff" class="form-check-input" />
+                                        Weekly
+                                    </label>
+                                    <div class="dropdown-divider"></div>
+                                    <div class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#AllEff">More info <i class="fas fa-info-circle"></i></div>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <h4><i class="fa fa-line-chart"></i>Today: <?php echo $ALL_EFF . "%"; ?></h4>
                             <div class="chart-container">
-                                <input type="checkbox" id="toggleWeekly" />
-                                <label for="toggleWeekly">Weekly</label>
                                 <canvas id="eff_chart"></canvas>
                             </div>
                         </div>
@@ -239,7 +267,7 @@
                     <div class="card shadow bg-light">
                         <div class="card-header bg-primary-subtle">
                             <!-- Button trigger modal -->
-                            <h4 class="fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#MainMatrixModal">Main Production Skill <i class="fas fa-info-circle"></i></h4>
+                            <h5 class="fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#MainMatrixModal">Main Production Skill <i class="fas fa-info-circle"></i></h5>
                         </div>
                         <div class="card-body">
                             <div class="chart-container">
@@ -252,7 +280,7 @@
                     <div class="card shadow bg-light">
                         <div class="card-header bg-primary-subtle">
                             <!-- Button trigger modal -->
-                            <h4 class="fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#CableMatrixModal">Cable Production Skill <i class="fas fa-info-circle"></i></h4>
+                            <h5 class="fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#CableMatrixModal">Cable Production Skill <i class="fas fa-info-circle"></i></h5>
                         </div>
                         <div class="card-body">
                             <div class="chart-container">
@@ -269,7 +297,7 @@
     <div class="modal fade" id="AllAttendance" tabindex="-1" aria-labelledby="AllAttendanceLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class=" modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary-subtle">
                     <h1 class="modal-title fs-5" id="AllAttendanceLabel">Attendance Rate Cable and Main</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
