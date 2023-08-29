@@ -55,8 +55,8 @@ $emp_id = $_SESSION['Emp_ID'];
         <h2>PRODUCTION SUMMARY</h2>
         <div class="d-flex flex-column">
           <a href="Generate Reports/module_attendance_summary.php?linkTitle=PRODUCTION ATTENDANCE" class="btn btn-primary m-2" name="update">PRODUCTION ATTENDANCE</a>
+          <a href="Generate Reports/PROD_Eff_data.php?linkTitle=PRODUCTION EFFICIENCY" class="btn btn-primary m-2" name="update">PRODUCTION EFFICIENCY</a>
           <a href="Generate Reports/PROD_trainings.php?linkTitle=PRODUCTION TRAINING INFORMATIONS" class="btn btn-primary m-2" name="update">PRODUCTION TRAINING INFORMATIONS</a>
-          <!-- <a href="Generate Reports/PROD_Efficiency.php?linkTitle=PRODUCTION EFFICIENCY" class="btn btn-primary m-2" name="update">PRODUCTION EFFICIENCY</a> -->
         </div>
         <div class="accordion custom-accordion accordion-flush primary-button m-2" id="accordionFlushExample">
           <div class="accordion-item">

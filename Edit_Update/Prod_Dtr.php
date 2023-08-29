@@ -47,7 +47,6 @@
 
 <body>
     <div class="table-responsive py-2">
-
         <button id="delete-selected-btn" class="btn btn-danger mx-1"><i class="fa-solid fa-circle-minus"></i> Delete Selected</button>
         <button type="button" class="btn btn-success" id="btnAdd" data-bs-toggle="modal" data-bs-target="#addDTR"><i class="fa-solid fa-circle-plus"></i> Add</button>
         <table id="prod_dtr" style="width:100%" class="table table-hover table-sm display compact">
@@ -318,7 +317,7 @@
                 });
 
             });
-            // // Handle delete button click
+            // Handle delete button click
             $('#prod_dtr tbody').on('click', '.delete-btn', function() {
                 var row = $(this).closest('tr');
                 var id = row.find('.edit-btn').data('id');

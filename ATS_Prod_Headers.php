@@ -1,12 +1,5 @@
 <?php
-session_start();
-
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "ewip";
-
-$conn = new mysqli($host, $user, $password, $dbname);
+include_once 'includes/dbh.inc.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">

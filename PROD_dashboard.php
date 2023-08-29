@@ -337,7 +337,7 @@ if (isset($_GET['date']) && $_GET['date'] != $defaultDate) {
 function getEfficiency($conn)
 {
 
-  $cable_efficiency = "SELECT record_date,operator_efficiency,technician_efficiency FROM efficiency_records WHERE WEEK(record_date) = WEEK(NOW()) AND DAYOFWEEK(record_date) BETWEEN 2 AND 6";
+  $cable_efficiency = "SELECT record_date,operator_efficiency,technician_efficiency FROM efficiency_records WHERE (WEEK(record_date) = WEEK(NOW()) OR WEEK(record_date) = WEEK(NOW()) - 1) AND DAYOFWEEK(record_date) BETWEEN 2 AND 6";
 
   //(WEEK(record_date) = WEEK(NOW()) OR WEEK(record_date) = WEEK(NOW()) - 1) AND DAYOFWEEK(record_date) BETWEEN 2 AND 6 --> IF LASTWEEK AND WEEKNOW
   // Execute the query
