@@ -65,6 +65,7 @@
                     <th>Code</th>
                     <th>Started</th>
                     <th>Ended</th>
+                    <th>Duration</th>
                     <th>Status</th>
                     <th>Build%</th>
                     <th>Std time</th>
@@ -125,8 +126,9 @@
                     [1, 'desc']
                 ],
                 columnDefs: [{
-                    targets: [''],
-                    className: "fontsize"
+                    target: 13,
+                    visible: false,
+                    searchable: false
                 }],
                 columns: [{
                         data: null,
@@ -172,6 +174,9 @@
                     },
                     {
                         data: 'Act_End'
+                    },
+                    {
+                        data: 'Duration'
                     },
                     {
                         data: 'wo_status',
@@ -227,6 +232,7 @@
                 $('#Act_EndedField').val(rowData.Act_End);
                 $('#wo_statusField').val(rowData.wo_status);
                 $('#build_percentField').val(rowData.build_percent);
+                $('#durationField').val(rowData.Duration);
                 $('#StdField').val(rowData.cycle_time);
                 $('#remarksField').val(rowData.remarks);
                 $('#ActivityField').val(rowData.Activity);
@@ -250,6 +256,7 @@
                 var updateEnd = $('#Act_EndedField').val();
                 var updateWo = $('#wo_statusField').val();
                 var updateBuild = $('#build_percentField').val();
+                var updateDuration = $('#durationField').val();
                 var updateStd = $('#StdField').val();
                 var updateRemarks = $('#remarksField').val();
                 var updateAct = $('#ActivityField').val();
@@ -272,6 +279,7 @@
                         act_end: updateEnd,
                         wo_status: updateWo,
                         build_percent: updateBuild,
+                        duration: updateDuration,
                         std: updateStd,
                         remarks: updateRemarks,
                         activity: updateAct,
@@ -447,7 +455,69 @@
                 // Clear the selected checkboxes
                 $('.delete-checkbox:checked').prop('checked', false);
             });
+            // Name and Emp ID selection
+            $(document).ready(function() {
+                // AJAX request to fetch users data
+                $.ajax({
+                    url: 'Prod_Dtr_command.php',
+                    type: 'POST',
+                    data: {
+                        fetchUsers: true
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var selectDropdown = $('#nameAddField');
+                        $.each(data, function(index, user) {
+                            var option = $('<option></option>')
+                                .attr('value', user.emp_name)
+                                .attr('data-empid', user.username)
+                                .text(user.emp_name);
+                            selectDropdown.append(option);
+                        });
+                        //console.log('Dropdown options populated:', data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error fetching user data: ' + error);
+                    }
+                });
 
+                $('#nameAddField').on('change', function() {
+                    var selectedEmpID = $(this).find(':selected').attr('data-empid');
+                    $('#emp_idAddField').val(selectedEmpID);
+                    //console.log('Selected EMP ID:', selectedEmpID);
+                });
+            });
+            // Description and Part numbers selection
+            $(document).ready(function() {
+                // AJAX request to fetch data from the database
+                $.ajax({
+                    url: 'Prod_Dtr_command.php',
+                    type: 'POST',
+                    data: {
+                        dataType: 'description'
+                    }, // Sending this parameter to indicate fetching descriptions
+                    dataType: 'json',
+                    success: function(data) {
+                        // Populate the select dropdown with descriptions and their part numbers
+                        var selectDropdown = $('#descAddField');
+                        $.each(data, function(index, item) {
+                            var option = $('<option></option>')
+                                .attr('value', item.description)
+                                .attr('data-desc', item.part_no)
+                                .text(item.description);
+                            selectDropdown.append(option);
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error: ' + error);
+                    }
+                });
+                $('#descAddField').on('change', function() {
+                    var selectedPartno = $(this).find(':selected').attr('data-desc');
+                    $('#part_noAddField').val(selectedPartno);
+                    //console.log('Selected Desc PN:', selectedPartno);
+                });
+            });
             // Handle click event of "Submit" button in the modal
             $('#addBtn').on('click', function(event) {
 
@@ -466,21 +536,20 @@
                 var InsertCode = $('#Act_CodeAddField').val();
                 var InsertStart = $('#Act_StartAddField').val();
                 var InsertEnd = $('#Act_EndedAddField').val();
+                var InsertDuration = $('#durationAddField').val();
                 var InsertWo = $('#wo_statusAddField').val();
                 var InsertBuild = $('#build_percentAddField').val();
                 var InsertStd = $('#StdAddField').val();
                 var InsertRemarks = $('#remarksAddField').val();
                 var InsertAct = $('#ActivityAddField').val();
 
-                // Check if any required field is empty
-                if (InsertDate === '' || InsertPartNo === '' || InsertDesc === '' || InsertPO === '' || InsertBatch === '' || InsertName === '' || InsertEMP === '' || InsertStations === '' || InsertCode === '' || InsertWo === '' || InsertBuild === '' || InsertStd === '' || InsertAct === '') {
-                    // Display error message for empty fields
-                    $('.alert').removeClass('d-none'); // Show the alert message
-                    return; // Prevent further execution of the code
+                // Check if required fields are filled
+                if (!InsertDate || !InsertDesc || !InsertCode || !InsertName || !InsertDuration || !InsertAct) {
+                    $('#alertMessage').removeClass('d-none'); // Show the alert
+                    return; // Prevent further execution
+                } else {
+                    $('#alertMessage').addClass('d-none'); // Hide the alert
                 }
-
-                // Hide the alert message if all fields are filled
-                $('.alert').addClass('d-none');
 
                 // Perform an AJAX request to insert the data into the database
                 $.ajax({
@@ -499,6 +568,7 @@
                         act_code: InsertCode,
                         act_start: InsertStart,
                         act_end: InsertEnd,
+                        duration: InsertDuration,
                         wo_status: InsertWo,
                         build_percent: InsertBuild,
                         std: InsertStd,
@@ -513,11 +583,29 @@
                         // Show success message using SweetAlert2
                         Swal.fire({
                             icon: 'success',
-                            title: 'Added Successful',
+                            title: 'Added Successful' + name,
                             text: 'The data has been added!',
                             showConfirmButton: false,
                             timer: 1500
                         }).then(function() {
+                            // Retrieve the values from the modal inputs
+                            $('#dateAddField').val('');
+                            $('#part_noAddField').val('');
+                            $('#descAddField').val('');
+                            $('#prod_noAddField').val('');
+                            $('#batch_noAddField').val('');
+                            $('#nameAddField').val('');
+                            $('#emp_idAddField').val('');
+                            $('#stationsAddField').val('');
+                            $('#Act_CodeAddField').val('');
+                            $('#Act_StartAddField').val('');
+                            $('#Act_EndedAddField').val('');
+                            $('#durationAddField').val('');
+                            $('#wo_statusAddField').val('');
+                            $('#build_percentAddField').val('');
+                            $('#StdAddField').val('');
+                            $('#remarksAddField').val('');
+                            $('#ActivityAddField').val('');
                             // Close the modal
                             document.getElementById('dismissModalBtn').click();
                             table.ajax.reload();
@@ -533,8 +621,12 @@
                         console.log('Error occurred during data insertion');
                     }
                 });
-            });
+                // if (InsertDate !== '' && InsertPartNo !== '' && InsertDesc !== '' && InsertName !== '' && InsertCode !== '' && InsertStd !== '' || InsertDuration !== '') {
 
+                // } else { // Display the alert message if any of the required fields are empty
+                //     $('.alert').removeClass('d-none');
+                // }
+            });
         });
     </script>
 
@@ -547,7 +639,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-warning d-flex align-items-center mx-2 my-1 d-none" role="alert">
+                    <div class="alert alert-warning d-flex align-items-center mx-2 my-1" role="alert" id="alertMessage">
                         <i class="bi bi-exclamation-triangle-fill me-2"></i>
                         <div>
                             Please fill in all required fields.
@@ -555,7 +647,7 @@
                     </div>
                     <div class="row g-3 m-2">
                         <div class="col-sm form-floating">
-                            <input type="date" class="form-control" id="dateAddField" name="date">
+                            <input type="date" class="form-control" id="dateAddField" name="date" required>
                             <label for="dateAddField">Date</label>
                         </div>
                         <div class="col-sm form-floating">
@@ -573,7 +665,7 @@
                     </div>
                     <div class="row g-3 m-2">
                         <div class="col-sm-6 form-floating">
-                            <select class="form-select" id="descAddField" name="desc">
+                            <select class="form-select" id="descAddField" name="desc" required>
                                 <option value="">Select Description</option>
                             </select>
                             <label for="descAddField">Description</label>
@@ -583,13 +675,13 @@
                             <label for="stationsAddField">Stations</label>
                         </div>
                         <div class="col-sm form-floating">
-                            <input type="number" class="form-control" id="Act_CodeAddField" name="act_code">
+                            <input type="number" class="form-control" id="Act_CodeAddField" name="act_code" required>
                             <label for="Act_CodeAddField">Code</label>
                         </div>
                     </div>
                     <div class="row g-3 m-2">
                         <div class="col-sm form-floating">
-                            <select class="form-select" id="nameAddField" name="Name">
+                            <select class="form-select" id="nameAddField" name="Name" required>
                                 <option value="">Select Name</option>
                             </select>
                             <label for="nameAddField">Name</label>
@@ -609,6 +701,12 @@
                             <label for="Act_EndedAddField">Act Ended</label>
                         </div>
                         <div class="col-sm form-floating">
+                            <input type="number" class="form-control" id="durationAddField" name="duration" required>
+                            <label for="durationAddField">Duration</label>
+                        </div>
+                    </div>
+                    <div class="row g-3 m-2">
+                        <div class="col-sm form-floating">
                             <select class="form-select" id="wo_statusAddField" name="wo_status">
                                 <option value="IDLE">IDLE</option>
                                 <option value="IN-PROCESS">IN-PROCESS</option>
@@ -616,16 +714,21 @@
                             </select>
                             <label for="wo_statusAddField">Status</label>
                         </div>
-                    </div>
-                    <div class="row g-3 m-2">
                         <div class="col-sm form-floating">
-                            <select class="form-select" id="ActivityAddField" name="activity">
+                            <select class="form-select" id="ActivityAddField" name="activity" required>
                                 <option value="SUB-ASSY">SUB-ASSY</option>
                                 <option value="SUB-ASSY">SUB TEST</option>
                                 <option value="FVI MODULE">FVI MODULE</option>
                                 <option value="OQA FAC">OQA FAC</option>
                                 <option value="FINAL INT">FINAL INT</option>
                                 <option value="FINAL TEST">FINAL TEST</option>
+                                <option value="PRE ATP">PRE ATP</option>
+                                <option value="ALIGNMENT">ALIGNMENT</option>
+                                <option value="TEACHING">TEACHING</option>
+                                <option value="VERIFICATION RUNS">VERIFICATION RUNS</option>
+                                <option value="OPTION INSTALL/ALIGN/VERIFY">OPTION INSTALL/ALIGN/VERIFY</option>
+                                <option value="NO OPTION">NO OPTION</option>
+                                <option value="NUTS & BOLTS">NUTS & BOLTS</option>
                                 <option value="Rework/Retest">Rework/Retest</option>
                                 <option value="PARTS RECEIVED CHECKING">PARTS RECEIVED CHECKING</option>
                                 <option value="BREAKTIME">BREAKTIME</option>
@@ -643,6 +746,7 @@
                         </div>
                         <div class="col-sm form-floating">
                             <select class="form-select" id="build_percentAddField" name="build_percent">
+                                <option value="">Select</option>
                                 <option value="5">5</option>
                                 <option value="10">10</option>
                                 <option value="20">20</option>
@@ -658,7 +762,7 @@
                             <label for="build_percentAddField">Build%</label>
                         </div>
                         <div class="col-sm form-floating">
-                            <input type="number" class="form-control" id="StdAddField" name="std">
+                            <input type="number" class="form-control" id="StdAddField" name="std" required>
                             <label for="StdAddField">Std Cycle Time</label>
                         </div>
                     </div>
@@ -748,7 +852,7 @@
                         </div>
                     </div>
                     <div class="row g-3 m-2">
-                        <div class="col-sm form-floating">
+                        <div class="col-sm-4 form-floating">
                             <select class="form-select" id="ActivityField" name="activity">
                                 <option value="SUB-ASSY">SUB-ASSY</option>
                                 <option value="SUB-ASSY">SUB TEST</option>
@@ -756,6 +860,13 @@
                                 <option value="OQA FAC">OQA FAC</option>
                                 <option value="FINAL INT">FINAL INT</option>
                                 <option value="FINAL TEST">FINAL TEST</option>
+                                <option value="PRE ATP">PRE ATP</option>
+                                <option value="ALIGNMENT">ALIGNMENT</option>
+                                <option value="TEACHING">TEACHING</option>
+                                <option value="VERIFICATION RUNS">VERIFICATION RUNS</option>
+                                <option value="OPTION INSTALL/ALIGN/VERIFY">OPTION INSTALL/ALIGN/VERIFY</option>
+                                <option value="NO OPTION">NO OPTION</option>
+                                <option value="NUTS & BOLTS">NUTS & BOLTS</option>
                                 <option value="Rework/Retest">Rework/Retest</option>
                                 <option value="PARTS RECEIVED CHECKING">PARTS RECEIVED CHECKING</option>
                                 <option value="BREAKTIME">BREAKTIME</option>
@@ -788,6 +899,10 @@
                             <label for="build_percentField">Build%</label>
                         </div>
                         <div class="col-sm form-floating">
+                            <input type="number" class="form-control" id="durationField" name="duration" required>
+                            <label for="durationField">Duration</label>
+                        </div>
+                        <div class="col-sm form-floating">
                             <input type="number" class="form-control" id="StdField" name="std">
                             <label for="StdField">Std Cycle Time</label>
                         </div>
@@ -806,64 +921,6 @@
             </div>
         </div>
     </div>
-    <script>
-        $(document).ready(function() {
-            // AJAX request to fetch users data
-            $.ajax({
-                url: 'Prod_Dtr_command.php',
-                type: 'POST',
-                data: {
-                    fetchUsers: true
-                }, // Sending this parameter to indicate fetching users
-                dataType: 'json',
-                success: function(data) {
-                    // Populate the select dropdown with users data
-                    var selectDropdown = $('#nameAddField');
-                    $.each(data, function(index, user) {
-                        var option = $('<option></option>').attr('value', user.username).text(user.emp_name);
-                        selectDropdown.append(option);
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.log('Error: ' + error);
-                }
-            });
-
-            // Update the EMP ID field when a user is selected
-            $('#nameAddField').on('change', function() {
-                var selectedEmpID = $(this).val();
-                $('#emp_idAddField').val(selectedEmpID);
-            });
-        });
-        $(document).ready(function() {
-            // AJAX request to fetch data from the database
-            $.ajax({
-                url: 'Prod_Dtr_command.php', // Replace 'fetch_data.php' with the PHP file where you'll handle the database query
-                type: 'POST',
-                data: {
-                    dataType: 'description'
-                }, // Sending this parameter to indicate fetching descriptions
-                dataType: 'json',
-                success: function(data) {
-                    // Populate the select dropdown with descriptions and their part numbers
-                    var selectDropdown = $('#descAddField');
-                    $.each(data, function(index, item) {
-                        var option = $('<option></option>').attr('value', item.part_no).text(item.description);
-                        selectDropdown.append(option);
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.log('Error: ' + error);
-                }
-            });
-
-            // Update the part number field when a user selects a description
-            $('#descAddField').on('change', function() {
-                var selectedPartno = $(this).val();
-                $('#part_noAddField').val(selectedPartno);
-            });
-        });
-    </script>
 </body>
 
 </html>

@@ -19,7 +19,7 @@ function getAllAttendanceData($conn, $interval)
 
   if ($interval === 'daily') {
 
-    $totalMP_sql = mysqli_query($conn, "SELECT user_ID, emp_name, department FROM user WHERE (department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394', '13351', '5555','12379')) OR (Department IN ('Prod Main', 'Production Main') AND username NOT IN ('4444', '13472', '947', '2023', '11742')) GROUP BY emp_name, department ORDER BY emp_name;");
+    $totalMP_sql = mysqli_query($conn, "SELECT user_ID, emp_name, department FROM user WHERE (department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394','13640','13351', '5555','12379')) OR (Department IN ('Prod Main', 'Production Main') AND username NOT IN ('4444', '13472', '947', '2023', '11742')) GROUP BY emp_name, department ORDER BY emp_name;");
     $total_MP = mysqli_num_rows($totalMP_sql);
 
     $totalPresent_sql = "SELECT DATE, SUM(CASE WHEN department = 'CABLE ASSY' THEN count ELSE 0 END) AS cable_count, SUM(CASE WHEN department = 'Production Main' THEN count ELSE 0 END) AS production_count, SUM(count) AS total_count FROM ( SELECT DATE, 'CABLE ASSY' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department = 'CABLE ASSY' AND WEEK(DATE) =  WEEK(NOW()) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('5555', '13640', '13394', '13351','12379') GROUP BY DATE UNION SELECT DATE, 'Production Main' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department IN ('Production Main', 'Prod Main') AND WEEK(DATE) =  WEEK(NOW()) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('4444', '13472', '947', '2023', '11742') GROUP BY DATE ) AS subquery GROUP BY DATE;";
@@ -34,7 +34,7 @@ function getAllAttendanceData($conn, $interval)
   } elseif ($interval === 'weekly') {
     $weekNumber = date('W');
 
-    $totalMP_sql = mysqli_query($conn, "SELECT user_ID, emp_name, department FROM user WHERE (department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394', '13351', '5555','12379')) OR (Department IN ('Prod Main', 'Production Main') AND username NOT IN ('4444', '13472', '947', '2023', '11742')) GROUP BY emp_name, department ORDER BY emp_name;");
+    $totalMP_sql = mysqli_query($conn, "SELECT user_ID, emp_name, department FROM user WHERE (department = 'Cable Assy' AND role = 'operator' AND username NOT IN ('13394','13640','13351', '5555','12379')) OR (Department IN ('Prod Main', 'Production Main') AND username NOT IN ('4444', '13472', '947', '2023', '11742')) GROUP BY emp_name, department ORDER BY emp_name;");
     $total_MP = mysqli_num_rows($totalMP_sql);
 
     $start_date = date('Y-m-d', strtotime("2023-W$weekNumber-1")); // Get the start date (Monday) of the week
@@ -43,26 +43,27 @@ function getAllAttendanceData($conn, $interval)
     $total_working_days = 0;
     $current_date = $start_date;
 
-    while ($current_date <= $end_date) {
-      $day_of_week = date('N', strtotime($current_date));
-      // Consider weekdays (Monday to Friday) as working days
-      if ($day_of_week >= 1 && $day_of_week <= 5) {
-        $total_working_days++;
-      }
-      $current_date = date('Y-m-d', strtotime($current_date . ' +1 day'));
-    }
+    // while ($current_date <= $end_date) {
+    //   $day_of_week = date('N', strtotime($current_date));
+    //   // Consider weekdays (Monday to Friday) as working days
+    //   if ($day_of_week >= 1 && $day_of_week <= 5) {
+    //     $total_working_days++;
+    //   }
+    //   $current_date = date('Y-m-d', strtotime($current_date . ' +1 day'));
+    // }
 
-    $totalPresent_sql = mysqli_query($conn, "SELECT DATE, SUM(CASE WHEN department = 'CABLE ASSY' THEN count ELSE 0 END) AS cable_count, SUM(CASE WHEN department = 'Production Main' THEN count ELSE 0 END) AS production_count, SUM(count) AS total_count FROM ( SELECT DATE, 'CABLE ASSY' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department = 'CABLE ASSY'AND (WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('5555', '13640', '13394', '13351','12379') GROUP BY DATE UNION SELECT DATE, 'Production Main' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department IN ('Production Main', 'Prod Main') AND (WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('4444', '13472', '947', '2023', '11742') GROUP BY DATE ) AS subquery GROUP BY WEEK(DATE);");
+    $totalPresent_sql = mysqli_query($conn, "SELECT DATE,COUNT(DISTINCT CASE WHEN (WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) THEN DATE END) AS present_days, SUM(CASE WHEN department = 'CABLE ASSY' THEN count ELSE 0 END) AS cable_count, SUM(CASE WHEN department = 'Production Main' THEN count ELSE 0 END) AS production_count, SUM(count) AS total_count FROM ( SELECT DATE, 'CABLE ASSY' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department = 'CABLE ASSY'AND (WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('5555', '13640', '13394', '13351','12379') GROUP BY DATE UNION SELECT DATE, 'Production Main' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department IN ('Production Main', 'Prod Main') AND (WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('4444', '13472', '947', '2023', '11742') GROUP BY DATE ) AS subquery GROUP BY WEEK(DATE);");
 
     $weeklyData = array();
 
     while ($row = mysqli_fetch_assoc($totalPresent_sql)) {
       $date = $row['DATE'];
       $weekNumber = date('W', strtotime($date));
+      $number_of_days = $row['present_days'];
       $attendance_count = $row['total_count'];
 
-      if ($total_MP !== 0 && $total_working_days > 0) {
-        $attendance_rate = round(($attendance_count / ($total_MP * $total_working_days)) * 100);
+      if ($total_MP !== 0 && $number_of_days > 0) {
+        $attendance_rate = round(($attendance_count / ($total_MP * $number_of_days)) * 100);
       } else {
         $attendance_rate = 0; // To avoid division by zero error
       }
@@ -80,13 +81,13 @@ function getAllAttendanceData($conn, $interval)
     $year = date('Y', strtotime($today));
     $lastDayOfYear = date('Y-12-t', strtotime("$year-01-01"));
 
-    $currentDate = date('Y-m-01'); // Start from the current month
+    $currentDate = date('Y-m-01', strtotime('-1 month')); // Start from the current month
     $endOfYear = false;
 
     $monthlyAttendanceRates = array();
 
     while (!$endOfYear) {
-      $totalPresent_sql = mysqli_query($conn, "SELECT COUNT(DISTINCT CASE WHEN (WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) THEN DATE END) AS present_days,SUM(CASE WHEN department = 'CABLE ASSY' THEN count ELSE 0 END) AS cable_count, SUM(CASE WHEN department = 'Production Main' THEN count ELSE 0 END) AS production_count, SUM(count) AS total_count FROM ( SELECT DATE, 'CABLE ASSY' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department = 'CABLE ASSY'AND (MONTH(DATE) = MONTH('$currentDate')) AND (WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('5555', '13640', '13394', '13351','12379') GROUP BY DATE UNION SELECT DATE, 'Production Main' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department IN ('Production Main', 'Prod Main')AND (MONTH(DATE) = MONTH('$currentDate')) AND(WEEK(DATE) = WEEK(NOW()) OR WEEK(DATE) = WEEK(NOW()) - 1) AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('4444', '13472', '947', '2023', '11742') GROUP BY DATE ) AS subquery");
+      $totalPresent_sql = mysqli_query($conn, "SELECT DATE, COUNT(DISTINCT DATE) AS present_days,SUM(CASE WHEN department = 'CABLE ASSY' THEN count ELSE 0 END) AS cable_count, SUM(CASE WHEN department = 'Production Main' THEN count ELSE 0 END) AS production_count, SUM(count) AS total_count FROM ( SELECT DATE, 'CABLE ASSY' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department = 'CABLE ASSY'AND MONTH(DATE) = MONTH('$currentDate') AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('5555', '13640', '13394', '13351','12379') GROUP BY DATE UNION SELECT DATE, 'Production Main' AS department, COUNT(*) AS count FROM prod_attendance WHERE Department IN ('Production Main', 'Prod Main')AND MONTH(DATE) = MONTH('$currentDate') AND DAYOFWEEK(DATE) BETWEEN 2 AND 6 AND Emp_ID NOT IN ('4444', '13472', '947', '2023', '11742') GROUP BY DATE ) AS subquery;");
 
       $attendance_count = 0;
       $row = mysqli_fetch_assoc($totalPresent_sql);
@@ -292,7 +293,7 @@ function getUpdatedInProcessValues($conn)
   $total_main_idl = mysqli_num_rows($sql_main_idl);
 
   // Retrieve the updated value for $total_cable_inprocess
-  $sql_cable_inprocess = mysqli_query($conn, "SELECT ID FROM dtr  WHERE Duration = '' AND Act_Start !='' AND wo_status='IN-PROCESS' ORDER BY Stations");
+  $sql_cable_inprocess = mysqli_query($conn, "SELECT ID FROM dtr WHERE Duration = '' AND Act_Start !='' AND wo_status='IN-PROCESS' ORDER BY Stations");
   $total_cable_inprocess = mysqli_num_rows($sql_cable_inprocess);
 
   // Retrieve the updated value for $total_cable_indirect

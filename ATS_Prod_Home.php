@@ -1,5 +1,6 @@
 <?php include 'ATS_Prod_Headers.php';
 
+
 date_default_timezone_set("Asia/Manila"); // set default timezone
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -87,6 +88,8 @@ if (isset($_POST['login_prod'])) {
             // Set session cookie to be secure and httponly
             $params = session_get_cookie_params();
             setcookie(session_name(), session_id(), time() + 3600, $params['path'], $params['domain'], true, true);
+            // Set the session lifetime to 1 hour (3600 seconds)
+            ini_set('session.gc_maxlifetime', 7200);
             if ($_SESSION['role'] === "cable_supervisor") {
                 // You can redirect the user to another page or perform any other desired actions
                 header('location: ATS_Production_Portal.php');
@@ -664,7 +667,6 @@ $conn->close();
                         <div class="col btn btn-outline-primary m-1 fw-bold" id="btnAbout" data-bs-toggle="collapse" data-bs-target="#collapseAbout" aria-expanded="false" aria-controls="collapseAbout">About</div>
                         <div class="col btn btn-outline-primary m-1 fw-bold" id="btnProducts" data-bs-toggle="collapse" data-bs-target="#collapseProducts" aria-expanded="false" aria-controls="collapseProducts">Products</div>
                     </div>
-
                     <div class="collapse show" id="collapseFeatures">
                         <div class="" data-aos="fade-right" data-aos-offset="300" data-aos-easing="ease-in-sine">
                             <h3 class="mb-2">
@@ -674,102 +676,101 @@ $conn->close();
                                 Aims to reduce manual gathering of data from production personnels. It optimizes manufacturing processes by collecting real-time data to enable informed decisions, increased efficiency, and improved product quality. It connects production activities to overall business success, reducing downtime and ensuring product consistency.
                             </p>
                         </div>
-                        <div class="overflow-y-auto ">
-                            <div class="accordion" id="featureAccordion" data-aos="zoom-in-right">
-                                <!-- Feature 1 -->
-                                <div class="accordion-item ">
-                                    <h5 class="accordion-header" id="heading1">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-                                            <i class="bi bi-check-circle-fill text-success me-2"></i> Real-time Data Collection
-                                        </button>
-                                    </h5>
-                                    <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="heading1" data-bs-parent="#featureAccordion">
-                                        <div class="accordion-body">
-                                            The system gathers data from technicians, operators, and other production personels in real-time, providing an up-to-date view of the entire manufacturing process.
-                                        </div>
+                        <div class="accordion" id="featureAccordion" data-aos="zoom-in-right">
+                            <!-- Feature 1 -->
+                            <div class="accordion-item">
+                                <h5 class="accordion-header" id="heading1">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i> Real-time Data Collection
+                                    </button>
+                                </h5>
+                                <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1" data-bs-parent="#featureAccordion">
+                                    <div class="accordion-body">
+                                        The system gathers data from technicians, operators, and other production personels in real-time, providing an up-to-date view of the entire manufacturing process.
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Feature 2 -->
-                                <div class="accordion-item">
-                                    <h5 class="accordion-header" id="heading2">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                                            <i class="bi bi-check-circle-fill text-success me-2"></i> Performance Metrics
-                                        </button>
-                                    </h5>
-                                    <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#featureAccordion">
-                                        <div class="accordion-body">
-                                            It offers key performance indicators (KPIs) and performance dashboards that display metrics such as production rate, cycle time, and equipment utilization, helping stakeholders monitor and assess productivity.
-                                        </div>
+                            <!-- Feature 2 -->
+                            <div class="accordion-item">
+                                <h5 class="accordion-header" id="heading2">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i> Performance Metrics
+                                    </button>
+                                </h5>
+                                <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#featureAccordion">
+                                    <div class="accordion-body">
+                                        It offers key performance indicators (KPIs) and performance dashboards that display metrics such as production rate, cycle time, and equipment utilization, helping stakeholders monitor and assess productivity.
                                     </div>
                                 </div>
-                                <!-- Feature 3 -->
-                                <div class="accordion-item">
-                                    <h5 class="accordion-header" id="heading3">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-                                            <i class="bi bi-check-circle-fill text-success me-2"></i> Anomaly Detection
-                                        </button>
-                                    </h5>
-                                    <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#featureAccordion">
-                                        <div class="accordion-body">
-                                            The system utilizes advanced algorithms to detect abnormalities or deviations from expected production patterns, enabling quick identification and resolution of potential issues.
-                                        </div>
+                            </div>
+                            <!-- Feature 3 -->
+                            <div class="accordion-item">
+                                <h5 class="accordion-header" id="heading3">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i> Anomaly Detection
+                                    </button>
+                                </h5>
+                                <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#featureAccordion">
+                                    <div class="accordion-body">
+                                        The system utilizes advanced algorithms to detect abnormalities or deviations from expected production patterns, enabling quick identification and resolution of potential issues.
                                     </div>
                                 </div>
-                                <!-- Feature 4 -->
-                                <div class="accordion-item">
-                                    <h5 class="accordion-header" id="heading4">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-                                            <i class="bi bi-check-circle-fill text-success me-2"></i> Downtime Tracking
-                                        </button>
-                                    </h5>
-                                    <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#featureAccordion">
-                                        <div class="accordion-body">
-                                            It records and analyzes downtime events, helping identify the root causes and opportunities for reducing production interruptions.
-                                        </div>
+                            </div>
+                            <!-- Feature 4 -->
+                            <div class="accordion-item">
+                                <h5 class="accordion-header" id="heading4">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i> Downtime Tracking
+                                    </button>
+                                </h5>
+                                <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#featureAccordion">
+                                    <div class="accordion-body">
+                                        It records and analyzes downtime events, helping identify the root causes and opportunities for reducing production interruptions.
                                     </div>
                                 </div>
-                                <!-- Feature 5 -->
-                                <div class="accordion-item">
-                                    <h5 class="accordion-header" id="heading5">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
-                                            <i class="bi bi-check-circle-fill text-success me-2"></i> Quality Control
-                                        </button>
-                                    </h5>
-                                    <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="heading5" data-bs-parent="#featureAccordion">
-                                        <div class="accordion-body">
-                                            The system includes quality monitoring tools to inspect and ensure product quality, reducing defects and maintaining consistent standards.
-                                        </div>
+                            </div>
+                            <!-- Feature 5 -->
+                            <div class="accordion-item">
+                                <h5 class="accordion-header" id="heading5">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i> Quality Control
+                                    </button>
+                                </h5>
+                                <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="heading5" data-bs-parent="#featureAccordion">
+                                    <div class="accordion-body">
+                                        The system includes quality monitoring tools to inspect and ensure product quality, reducing defects and maintaining consistent standards.
                                     </div>
                                 </div>
-                                <!-- Feature 6 -->
-                                <div class="accordion-item">
-                                    <h5 class="accordion-header" id="heading6">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
-                                            <i class="bi bi-check-circle-fill text-success me-2"></i> Historical Data and Trend Analysis
-                                        </button>
-                                    </h5>
-                                    <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="heading6" data-bs-parent="#featureAccordion">
-                                        <div class="accordion-body">
-                                            It stores historical production data, facilitating trend analysis to identify patterns, make forecasts, and improve production planning.
-                                        </div>
+                            </div>
+                            <!-- Feature 6 -->
+                            <div class="accordion-item">
+                                <h5 class="accordion-header" id="heading6">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse6" aria-expanded="false" aria-controls="collapse6">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i> Historical Data and Trend Analysis
+                                    </button>
+                                </h5>
+                                <div id="collapse6" class="accordion-collapse collapse" aria-labelledby="heading6" data-bs-parent="#featureAccordion">
+                                    <div class="accordion-body">
+                                        It stores historical production data, facilitating trend analysis to identify patterns, make forecasts, and improve production planning.
                                     </div>
                                 </div>
-                                <!-- Feature 7 -->
-                                <div class="accordion-item">
-                                    <h5 class="accordion-header" id="heading7">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse7" aria-expanded="false" aria-controls="collapse7">
-                                            <i class="bi bi-check-circle-fill text-success me-2"></i> Reporting and Alerts
-                                        </button>
-                                    </h5>
-                                    <div id="collapse7" class="accordion-collapse collapse" aria-labelledby="heading7" data-bs-parent="#featureAccordion">
-                                        <div class="accordion-body">
-                                            The system generates customized reports and sends real-time alerts to relevant personnel when critical events or production targets are not being met.
-                                        </div>
+                            </div>
+                            <!-- Feature 7 -->
+                            <div class="accordion-item">
+                                <h5 class="accordion-header" id="heading7">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse7" aria-expanded="false" aria-controls="collapse7">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i> Reporting and Alerts
+                                    </button>
+                                </h5>
+                                <div id="collapse7" class="accordion-collapse collapse" aria-labelledby="heading7" data-bs-parent="#featureAccordion">
+                                    <div class="accordion-body">
+                                        The system generates customized reports and sends real-time alerts to relevant personnel when critical events or production targets are not being met.
                                     </div>
                                 </div>
-                                <!-- Feature 8 -->
-                                <!-- <div class="accordion-item">
+                            </div>
+                            <!-- Feature 8 -->
+                            <!-- <div class="accordion-item">
                                 <h5 class="accordion-header" id="heading8">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse8" aria-expanded="false" aria-controls="collapse8">
                                         <i class="bi bi-check-circle-fill text-success me-2"></i> Integration and Connectivity
@@ -780,39 +781,34 @@ $conn->close();
                                         It can integrate with various manufacturing systems and Enterprise Resource Planning (ERP) software, streamlining data flow and enhancing overall operational efficiency.
                                     </div>
                                 </div>
-                            </div> -->
-                                <!-- Feature 9 -->
-                                <div class="accordion-item">
-                                    <h5 class="accordion-header" id="heading9">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse9" aria-expanded="false" aria-controls="collapse9">
-                                            <i class="bi bi-check-circle-fill text-success me-2"></i> User-friendly Interface
-                                        </button>
-                                    </h5>
-                                    <div id="collapse9" class="accordion-collapse collapse" aria-labelledby="heading9" data-bs-parent="#featureAccordion">
-                                        <div class="accordion-body">
-                                            The system offers an intuitive interface with visualizations and easy-to-interpret data, making it accessible to technicians, operators, supervisors and managers with varying technical backgrounds.
-                                        </div>
+                                </div> -->
+                            <!-- Feature 9 -->
+                            <div class="accordion-item">
+                                <h5 class="accordion-header" id="heading9">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse9" aria-expanded="false" aria-controls="collapse9">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i> User-friendly Interface
+                                    </button>
+                                </h5>
+                                <div id="collapse9" class="accordion-collapse collapse" aria-labelledby="heading9" data-bs-parent="#featureAccordion">
+                                    <div class="accordion-body">
+                                        The system offers an intuitive interface with visualizations and easy-to-interpret data, making it accessible to technicians, operators, supervisors and managers with varying technical backgrounds.
                                     </div>
                                 </div>
-                                <!-- Feature 10 -->
-                                <div class="accordion-item">
-                                    <h5 class="accordion-header" id="heading10">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse10" aria-expanded="false" aria-controls="collapse10">
-                                            <i class="bi bi-check-circle-fill text-success me-2"></i> Scalability
-                                        </button>
-                                    </h5>
-                                    <div id="collapse10" class="accordion-collapse collapse" aria-labelledby="heading10" data-bs-parent="#featureAccordion">
-                                        <div class="accordion-body">
-                                            It is designed to accommodate the growing needs of the manufacturing environment, making it adaptable to changes in production volume and complexity.
-                                        </div>
+                            </div>
+                            <!-- Feature 10 -->
+                            <div class="accordion-item">
+                                <h5 class="accordion-header" id="heading10">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse10" aria-expanded="false" aria-controls="collapse10">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i> Scalability
+                                    </button>
+                                </h5>
+                                <div id="collapse10" class="accordion-collapse collapse" aria-labelledby="heading10" data-bs-parent="#featureAccordion">
+                                    <div class="accordion-body">
+                                        It is designed to accommodate the growing needs of the manufacturing environment, making it adaptable to changes in production volume and complexity.
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- CTA button -->
-                        <a href="#" class="btn btn-primary mt-3">Learn More</a>
-
-
                     </div>
                     <div class="collapse" id="collapseAbout">
                         <!-- <div class="card card-body" data-aos="fade-right" data-aos-offset="300" data-aos-easing="ease-in-sine">
@@ -856,37 +852,57 @@ $conn->close();
 
                     </div>
                     <div class="collapse" id="collapseProducts">
-                        <div class="card-group">
+                        <div class="card-group shadow-lg">
                             <div class="card" data-aos="fade-right" data-aos-offset="300" data-aos-easing="ease-in-sine">
                                 <img src="/ATS/ATSPROD_PORTAL/assets/images/JLP.png" class="card-img-top p-1 h-50" alt="JLP Tray Handling System">
                                 <div class="card-body">
-                                    <h5 class="card-title">JLP</h5>
+                                    <h5 class="card-title fw-bold mb-3">JLP</h5>
                                     <p class="card-text">Experience seamless automation with our <b>JLP Tray Handling System</b> transporting JEDEC trays to and from SMEMA-Equipped process tools.</p>
                                 </div>
                             </div>
                             <div class="card" data-aos="fade-right" data-aos-offset="300" data-aos-easing="ease-in-sine">
                                 <img src="/ATS/ATSPROD_PORTAL/assets/images/PNP.png" class="card-img-top p-1 h-50" alt="PNP Matrix">
                                 <div class="card-body">
-                                    <h5 class="card-title">PNP Matrix</h5>
+                                    <h5 class="card-title fw-bold mb-3">PNP Matrix</h5>
                                     <p class="card-text">Discover the cost-effective solution with our <b>PNP Matrix</b> designed for smaller device portfolios compared to Eclipse large devices.</p>
                                 </div>
                             </div>
                             <div class="card" data-aos="fade-right" data-aos-offset="300" data-aos-easing="ease-in-sine">
                                 <img src="/ATS/ATSPROD_PORTAL/assets/images/OLB.png" class="card-img-top p-1 h-50" alt="OLB Equipment Sorter">
                                 <div class="card-body">
-                                    <h5 class="card-title">OLB</h5>
+                                    <h5 class="card-title fw-bold mb-3">OLB</h5>
                                     <p class="card-text">Efficiently <b>sort devices offline</b> with our <b>OLB Equipment Sorter</b> after testing and binning to more categories than standard handlers.</p>
                                 </div>
                             </div>
                             <div class="card" data-aos="fade-right" data-aos-offset="300" data-aos-easing="ease-in-sine">
-                                <img src="/ATS/ATSPROD_PORTAL/assets/images/JTP.png" class="card-img-top p-1 h-50" alt="JTP Automated Tool">
+                                <img src="/ATS/ATSPROD_PORTAL/assets/images/JTP.png" class="card-img-top p-3 h-50" alt="JTP Automated Tool">
                                 <div class="card-body">
-                                    <h5 class="card-title">JTP</h5>
-                                    <p class="card-text">Introducing the <b>JTP Automated Tool</b> designed to effortlessly <b>load or remove a thin metal plate (top plate) to JEDEC trays</b> on a SMEMA-compliant conveyor.</p>
+                                    <h5 class="card-title fw-bold mb-3">JTP</h5>
+                                    <p class="card-text">
+                                        Introducing the <b>JTP Automated Tool</b> designed to effortlessly <b>load or remove a thin metal plate (top plate) to JEDEC trays</b> on a SMEMA-compliant conveyor.
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid" style="background-color: #2706F0;">
+                <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasDark" aria-labelledby="offcanvasDarkLabel" style="background-color: #2706F0;">
+                    <div class="offcanvas-header text-white">
+                        <h5 class="offcanvas-title fw-bold" id="offcanvasDarkLabel">ATS Systems</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body text-bg-light">
+                        <div class="d-flex border border-2 border-dark">
+                            <div class="p-2 flex-shrink-1 bg-white border-end border-dark">
+                                <img src="http://192.168.3.39/photos/csatlogo.png" alt="Csat_logo" height="35">
+                            </div>
+                            <div class="p-2 w-100 bg-dark-subtle mx-auto" onclick="window.location.href='http://192.168.3.39/Login/Login';" style="cursor: pointer;">
+                                <h4 class="fw-bold">ATS - QA</h4>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

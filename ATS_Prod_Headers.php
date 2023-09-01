@@ -1,5 +1,4 @@
-<?php
-include_once 'includes/dbh.inc.php';
+<?php include_once 'includes/dbh.inc.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,7 +41,8 @@ include_once 'includes/dbh.inc.php';
   <div class="container-fluid" style="background-color: #2706F0;">
     <header class="py-1 mb-0">
       <img class="rounded float-start" src="/ATS/ATSPROD_PORTAL/assets/images/pimes.png" alt="Logo" width="70" height="45">
-      <img class="rounded float-end" src="/ATS/ATSPROD_PORTAL/assets/images/ATS logoa.png" alt="Profile" width="70" height="45">
+      <!-- <img class="rounded float-end" src="/ATS/ATSPROD_PORTAL/assets/images/ATS logoa.png" alt="Profile" width="70" height="45"> -->
+      <img class="rounded float-end" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDark" src="/ATS/ATSPROD_PORTAL/assets/images/ATS logoa.png" alt="Profile" width="70" height="45">
       <h2 class="text-center text-white fw-bold">ATS OPERATIONAL PORTAL</h2>
     </header>
   </div>

@@ -18,16 +18,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $act_end = $_POST['act_end'];
         $wo_status = $_POST['wo_status'];
         $build_percent = $_POST['build_percent'];
+        $duration = $_POST['duration'];
         $cycletime = $_POST['std'];
         $remarks = $_POST['remarks'];
         $id = $_POST['id'];
         $activity = $_POST['activity'];
 
-        $sql = "UPDATE `prod_dtr` SET `DATE`= ?, `Part_No`= ? , `Stations`= ?,`description`= ?, `Prod_Order_No`= ?, `batch_no`= ?,`Name`= ?,`Emp_ID`= ?,`Code`= ?,`Act_Start`= ?,`Act_End`= ?,`wo_status`= ?,`build_percent`= ?,`cycle_time`= ?,`remarks`= ?, Activity= ? WHERE ID= ? ";
+        $sql = "UPDATE `prod_dtr` SET `DATE`= ?, `Part_No`= ? , `Stations`= ?,`description`= ?, `Prod_Order_No`= ?, `batch_no`= ?,`Name`= ?,`Emp_ID`= ?,`Code`= ?,`Act_Start`= ?,`Act_End`= ?,`wo_status`= ?,`build_percent`= ?,`Duration`= ?,`cycle_time`= ?,`remarks`= ?, Activity= ? WHERE ID= ? ";
         $stmt = mysqli_prepare($conn, $sql);
 
         if ($stmt) {
-            mysqli_stmt_bind_param($stmt, 'ssssssssssssssssi', $date, $part_no, $stations, $description, $prod_no, $batch_no, $name, $emp_id, $act_code, $act_start, $act_end, $wo_status, $build_percent, $cycletime, $remarks, $activity, $id);
+            mysqli_stmt_bind_param($stmt, 'sssssssssssssssssi', $date, $part_no, $stations, $description, $prod_no, $batch_no, $name, $emp_id, $act_code, $act_start, $act_end, $wo_status, $build_percent, $duration, $cycletime, $remarks, $activity, $id);
             $result = mysqli_stmt_execute($stmt);
 
             if ($result) {
@@ -70,17 +71,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $act_code = $_POST['act_code'];
         $act_start = $_POST['act_start'];
         $act_end = $_POST['act_end'];
+        $duration = $_POST['duration'];
         $wo_status = $_POST['wo_status'];
         $build_percent = $_POST['build_percent'];
         $cycletime = $_POST['std'];
         $remarks = $_POST['remarks'];
         $activity = $_POST['activity'];
 
-        $sql = "INSERT INTO prod_dtr (DATE, Part_No, description, Stations, Prod_Order_No, batch_no, Name, Emp_ID, Code, Act_Start, Act_End, wo_status, build_percent, cycle_time, remarks, Activity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO prod_dtr (DATE, Part_No, description, Stations, Prod_Order_No, batch_no, Name, Emp_ID, Code, Act_Start, Act_End,Duration, wo_status, build_percent, cycle_time, remarks, Activity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($conn, $sql);
 
         if ($stmt) {
-            mysqli_stmt_bind_param($stmt, 'ssssssssssssssss', $date, $part_no, $description, $stations, $prod_no, $batch_no, $name, $emp_id, $act_code, $act_start, $act_end, $wo_status, $build_percent, $cycletime, $remarks, $activity);
+            mysqli_stmt_bind_param($stmt, 'sssssssssssssssss', $date, $part_no, $description, $stations, $prod_no, $batch_no, $name, $emp_id, $act_code, $act_start, $act_end, $duration, $wo_status, $build_percent, $cycletime, $remarks, $activity);
             $result = mysqli_stmt_execute($stmt);
 
             if ($result) {

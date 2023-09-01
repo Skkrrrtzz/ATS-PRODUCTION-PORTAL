@@ -127,7 +127,7 @@ $dbconnect = mysqli_connect('localhost', 'root', '', 'ewip');
 
                   <?php
                   $date = date("Y-m-d");
-                  $sql = "SELECT Name,Time_In FROM prod_attendance WHERE Department='Cable Assy' AND Emp_ID NOT IN ('5555','13640') AND DATE='$date' GROUP BY Name";
+                  $sql = "SELECT Name,Time_In FROM prod_attendance WHERE Department='Cable Assy' AND Emp_ID NOT IN ('5555','13394','13640','13351', '5555','12379') AND DATE='$date' GROUP BY Name";
                   $result = mysqli_query($dbconnect, $sql);
 
                   while ($sql_result = mysqli_fetch_assoc($result)) {
@@ -160,20 +160,20 @@ $dbconnect = mysqli_connect('localhost', 'root', '', 'ewip');
         <?php
         }
         // GET DATA FROM DATABASE
-        $sqlname = mysqli_query($dbconnect, "SELECT user_ID,emp_name FROM `user` WHERE department IN ('Cable Assy') AND role IN('Operator') AND username NOT IN ('13394','13351','5555')");
+        $sqlname = mysqli_query($dbconnect, "SELECT user_ID,emp_name FROM `user` WHERE department IN ('Cable Assy') AND role IN('Operator') AND username NOT IN ('13394','13351','5555','13640','12379')");
 
 
         // FOR ABSENT NAMES
         for ($day = 1; $day <= 31; $day++) {
           $day_padded = str_pad($day, 2, "0", STR_PAD_LEFT);
-          $sqldays_abs = mysqli_query($dbconnect, "SELECT DISTINCT u.emp_name, u.username FROM user u LEFT JOIN (SELECT DISTINCT Name, Emp_ID FROM prod_attendance WHERE Department IN ('Cable Assy') AND Name != 'Operator' AND Name != '' AND DAY(DATE) = '$day_padded' and MONTH(DATE) = '$month' and YEAR(DATE) = '$year') p ON u.emp_name = p.Name AND u.username = p.Emp_ID WHERE u.Department IN ('Cable Assy') AND u.role= 'Operator' AND  u.username NOT IN ('13394','13351','5555') AND p.Name IS NULL ORDER BY u.emp_name");
+          $sqldays_abs = mysqli_query($dbconnect, "SELECT DISTINCT u.emp_name, u.username FROM user u LEFT JOIN (SELECT DISTINCT Name, Emp_ID FROM prod_attendance WHERE Department IN ('Cable Assy') AND Name != 'Operator' AND Name != '' AND DAY(DATE) = '$day_padded' and MONTH(DATE) = '$month' and YEAR(DATE) = '$year') p ON u.emp_name = p.Name AND u.username = p.Emp_ID WHERE u.Department IN ('Cable Assy') AND u.role= 'Operator' AND  u.username NOT IN ('13394','13351','5555','13640','12379') AND p.Name IS NULL ORDER BY u.emp_name");
           $sql_abs[$day] = $sqldays_abs;
         }
 
         // FOR PRESENT NAMES
         for ($day = 1; $day <= 31; $day++) {
           $day_padded = str_pad($day, 2, "0", STR_PAD_LEFT);
-          $sqldays = mysqli_query($dbconnect, "SELECT Name FROM prod_attendance WHERE Department IN ('Cable Assy') AND Name!='OPERATOR' AND Name !='' AND Emp_ID NOT IN ('13394','13640','13351','5555') AND Day(DATE)='$day_padded' AND Month(DATE)='$month' AND YEAR(DATE)='$year'GROUP BY Name order by Name");
+          $sqldays = mysqli_query($dbconnect, "SELECT Name FROM prod_attendance WHERE Department IN ('Cable Assy') AND Name!='OPERATOR' AND Name !='' AND Emp_ID NOT IN ('13394','13351','5555','13640','12379') AND Day(DATE)='$day_padded' AND Month(DATE)='$month' AND YEAR(DATE)='$year'GROUP BY Name order by Name");
           $sqlday[$day] = $sqldays;
         }
 
