@@ -7,7 +7,7 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ATS Operational Portal</title>
+  <title>ATS Production Portal</title>
   <link rel="icon" href="/ATS/ATSPROD_PORTAL/assets/images/pimes.ico" type="image/ico">
   <!-- CSS -->
   <link rel="stylesheet" href="/ATS/ATSPROD_PORTAL/assets/css/bootstrap.min.css">
@@ -43,7 +43,7 @@
       <img class="rounded float-start" src="/ATS/ATSPROD_PORTAL/assets/images/pimes.png" alt="Logo" width="70" height="45">
       <!-- <img class="rounded float-end" src="/ATS/ATSPROD_PORTAL/assets/images/ATS logoa.png" alt="Profile" width="70" height="45"> -->
       <img class="rounded float-end" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDark" src="/ATS/ATSPROD_PORTAL/assets/images/ATS logoa.png" alt="Profile" width="70" height="45">
-      <h2 class="text-center text-white fw-bold">ATS OPERATIONAL PORTAL</h2>
+      <h2 class="text-center text-white fw-bold">ATS PRODUCTION PORTAL</h2>
     </header>
   </div>
 </body>

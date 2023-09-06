@@ -1,6 +1,5 @@
 <?php include 'ATS_Prod_Headers.php';
 
-
 date_default_timezone_set("Asia/Manila"); // set default timezone
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -895,13 +894,21 @@ $conn->close();
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body text-bg-light">
-                        <div class="d-flex border border-2 border-dark">
+                        <div class="d-flex border border-2 border-dark m-2">
                             <div class="p-2 flex-shrink-1 bg-white border-end border-dark">
-                                <img src="http://192.168.3.39/photos/csatlogo.png" alt="Csat_logo" height="35">
+                                <img src="http://192.168.6.144:8080/photos/csatlogo.png" alt="Csat_logo" height="35">
                             </div>
-                            <div class="p-2 w-100 bg-dark-subtle mx-auto" onclick="window.location.href='http://192.168.3.39/Login/Login';" style="cursor: pointer;">
+                            <div class="p-2 w-100 bg-dark-subtle mx-auto" onclick="window.location.href='http://192.168.6.144:8080/Login/Login';" style="cursor: pointer;">
                                 <h4 class="fw-bold">ATS - QA</h4>
                             </div>
+                        </div>
+                        <div class="d-flex border border-2 border-dark m-2">
+                            <div class="p-2 flex-shrink-1 bg-white border-end border-dark">
+                                <img src="/ATS/ATSPROD_PORTAL/assets/images/ATS logoa.png" alt="ats_logo" height="35" width="5">
+                            </div>
+                            <!-- <div class="p-2 w-100 bg-dark-subtle mx-auto" onclick="window.location.href='http://192.168.6.144:8080/Login/Login';" style="cursor: pointer;">
+                                <h4 class="fw-bold">ATS - PPIC</h4>
+                            </div> -->
                         </div>
                     </div>
                 </div>

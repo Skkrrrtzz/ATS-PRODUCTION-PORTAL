@@ -262,6 +262,15 @@ function fetchAttendanceData($conn, $clickedDate)
     );
   }
 
+  $sql_abs_att = "SELECT u.emp_name FROM user u LEFT JOIN prod_attendance pa ON u.emp_name = pa.Name AND pa.DATE = '$clickedDate' WHERE pa.Name IS NULL AND u.department IN ('Prod Main', 'Production Main','Cable Assy') AND u.role IN('operator','technician','cable_supervisor') AND u.username NOT IN ('266','2063','13640','13394', '13351', '5555','12379','4444', '13472', '947', '2023', '11742')GROUP BY u.emp_name, u.department ORDER BY u.emp_name";
+  $result_abs = mysqli_query($conn, $sql_abs_att);
+
+  while ($sql_result = mysqli_fetch_assoc($result_abs)) {
+    $attendanceData['abs'][] = array(
+      'Name' => $sql_result['emp_name']
+    );
+  }
+
   return $attendanceData;
 }
 
@@ -278,6 +287,8 @@ if (isset($_GET['clickedDate'])) {
     'prod' => $attendanceData['prod'],
     'prod_present' => $attendanceData['prod_pres'],
     'prod_abs' => $attendanceData['prod_abs'],
+    'all_abs' => $attendanceData['abs'],
+    'dates' => $clickedDate
   );
 
   echo json_encode($response);

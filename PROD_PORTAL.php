@@ -651,10 +651,7 @@
                                     $status = $data['status'];
                                     $color = $data['color'];
 
-                                    $query = "SELECT Name, Stations, batch_no, description, Prod_Order_No, product, Act_Start, Qty_Make, Activity, remarks, NOW() as timer
-                          FROM prod_dtr
-                          WHERE Duration = '' AND Act_Start != '' AND wo_status = '$status'
-                          ORDER BY Stations";
+                                    $query = "SELECT Name, Stations, batch_no, description, Prod_Order_No, product, Act_Start, Qty_Make, Activity, remarks, NOW() as timer FROM prod_dtr WHERE Act_Start != '' AND Act_End='' AND wo_status = '$status' ORDER BY Stations, product";
 
                                     $result = mysqli_query($conn, $query);
 
@@ -697,7 +694,7 @@
 
     <!--ATTENDANCE TODAY MODAL -->
     <div class="modal fade" id="AllAttModal" tabindex="-1" aria-labelledby="AllAttModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
                     <h1 class="modal-title fs-5" id="AllAttModalLabel">Attendance Login Time</h1>
@@ -707,12 +704,12 @@
                     <div class="table-responsive">
                         <div class="container-fluid">
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-4">
                                     <input type="hidden" id="clickedDateInput" name="clickedDate">
                                     <h4>CABLE <span id="cablePresentBadge" class="badge rounded-pill text-bg-success">Present: </span>
                                         <span id="cableAbsentBadge" class="badge rounded-pill text-bg-warning">Absent: </span>
                                     </h4>
-                                    <table class="table table-hover fw-bold rounded-table" id="cableTable">
+                                    <table class="table table-hover fw-bold rounded-table border border-2" id="cableTable">
                                         <thead class="text-bg-primary">
                                             <tr>
                                                 <th>Name</th>
@@ -723,15 +720,27 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-4">
                                     <h4>MAIN <span id="prodPresentBadge" class="badge rounded-pill text-bg-success">Present: </span>
                                         <span id="prodAbsentBadge" class="badge rounded-pill text-bg-warning">Absent: </span>
                                     </h4>
-                                    <table class="table table-hover fw-bold rounded-table" id="mainTable">
+                                    <table class="table table-hover fw-bold rounded-table border border-2" id="mainTable">
                                         <thead class="text-white bg-primary">
                                             <tr>
                                                 <th>Name</th>
                                                 <th>Time In</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-4">
+                                    <h4 class="m-1">Absent on <span id="datesBadge" class="badge rounded-pill text-bg-success"></h4>
+                                    <table class="table table-hover fw-bold rounded-table border border-2" id="absTable">
+                                        <thead class="text-white bg-primary">
+                                            <tr>
+                                                <th>Name</th>
                                             </tr>
                                         </thead>
                                         <tbody>

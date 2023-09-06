@@ -286,12 +286,14 @@
                             const cableAbsent = response.cable_abs;
                             const prodPresent = response.prod_present;
                             const prodAbsent = response.prod_abs;
+                            const dates = response.dates;
 
                             // Update the HTML elements with the cable attendance data
                             $('#cablePresentBadge').text(`Present: ${cablePresent}`);
                             $('#cableAbsentBadge').text(`Absent: ${cableAbsent}`);
                             $('#prodPresentBadge').text(`Present: ${prodPresent}`);
                             $('#prodAbsentBadge').text(`Absent: ${prodAbsent}`);
+                            $('#datesBadge').text(`${dates}`);
 
                             // Update the modal content with the fetched data
                             updateModalContent(response);
@@ -313,10 +315,12 @@
         function updateModalContent(response) {
             const cableTableBody = $('#cableTable tbody');
             const mainTableBody = $('#mainTable tbody');
+            const allAbsentTableBody = $('#absTable tbody');
 
             // Clear the existing table rows
             cableTableBody.empty();
             mainTableBody.empty();
+            allAbsentTableBody.empty();
 
             // Populate the tables with attendance data
             $.each(response.cable, function(index, entry) {
@@ -335,6 +339,14 @@
                 <td>${entry.Time_In}</td>
             </tr>`;
                 mainTableBody.append(row);
+            });
+
+            $.each(response.all_abs, function(index, entry) {
+                const row = `
+            <tr>
+                <td>${entry.Name}</td>
+            </tr>`;
+                allAbsentTableBody.append(row);
             });
         }
     </script>

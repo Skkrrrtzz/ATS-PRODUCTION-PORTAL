@@ -35,12 +35,12 @@
                 {
                     $result = [];
                     // QUERY FOR HEADCOUNT
-                    $jlp_hc_sql = mysqli_query($conn, "SELECT COUNT(DISTINCT Name) AS total_headcount FROM prod_dtr WHERE Department IN ('Production Main','Prod Main') AND Name != 'TECHNICIAN' AND product='JLP' AND description != 'INDIRECT ACTIVITY' AND Emp_ID NOT IN ('4444','11451') AND DATE BETWEEN '$datefrom' AND '$dateto'");
+                    $jlp_hc_sql = mysqli_query($conn, "SELECT COUNT(DISTINCT Name) AS total_headcount FROM prod_dtr WHERE Department IN ('Production Main','Prod Main') AND Name != 'TECHNICIAN' AND product='JLP' AND description != 'INDIRECT ACTIVITY' AND Emp_ID NOT IN ('4444','11451','12444') AND DATE BETWEEN '$datefrom' AND '$dateto'");
                     $jlp_hc_row = mysqli_fetch_assoc($jlp_hc_sql);
                     $total_hc_jlp = $jlp_hc_row['total_headcount'];
 
                     // QUERY FOR EMPLOYEES
-                    $jlp_sql_data = mysqli_query($conn, "SELECT Name,Qty_Make,cycle_time,SUM(build_percent/100 *Qty_Make) AS build_percent,Stations,Activity,description,Part_No,Duration,Prod_Order_No,batch_no,Code,Act_Start,Act_End,remarks,product FROM prod_dtr WHERE DATE BETWEEN '$datefrom' AND '$dateto' AND Qty_Make > 0 AND product = 'JLP' AND Emp_ID NOT IN ('11451','4444') AND Act_End != '' AND Labor_Type != 'Prod_Reg_ID' GROUP BY Name,description,Activity ORDER BY Name ASC");
+                    $jlp_sql_data = mysqli_query($conn, "SELECT Name,Qty_Make,cycle_time,SUM(build_percent/100 *Qty_Make) AS build_percent,Stations,Activity,description,Part_No,Duration,Prod_Order_No,batch_no,Code,Act_Start,Act_End,remarks,product FROM prod_dtr WHERE DATE BETWEEN '$datefrom' AND '$dateto' AND Qty_Make > 0 AND product = 'JLP' AND Emp_ID NOT IN ('11451','4444','12444') AND Act_End != '' AND Labor_Type != 'Prod_Reg_ID' GROUP BY Name,description,Activity ORDER BY Name ASC");
 
                     $array1 = []; // Array to store cycle time values
                     $array2 = []; // Array to store build percent values
@@ -87,12 +87,12 @@
                     }
                     $result[] = $result_jlp;
                     // QUERY FOR HEADCOUNT
-                    $pnp_hc_sql = mysqli_query($conn, "SELECT COUNT(DISTINCT Name) AS total_headcount FROM prod_dtr WHERE Department = 'Prod Main' AND Act_End != '' AND Name != 'TECHNICIAN' AND product='PNP' AND description != 'INDIRECT ACTIVITY' AND Emp_ID != '11451' AND DATE BETWEEN '$datefrom' AND '$dateto'");
+                    $pnp_hc_sql = mysqli_query($conn, "SELECT COUNT(DISTINCT Name) AS total_headcount FROM prod_dtr WHERE Department = 'Prod Main' AND Name != 'TECHNICIAN' AND product='PNP' AND description != 'INDIRECT ACTIVITY' AND Emp_ID NOT IN ('11451','12444') AND DATE BETWEEN '$datefrom' AND '$dateto'");
                     $pnp_hc_row = mysqli_fetch_assoc($pnp_hc_sql);
                     $total_hc_pnp = $pnp_hc_row['total_headcount'];
 
                     // QUERY FOR EMPLOYEES
-                    $pnp_sql_data = mysqli_query($conn, "SELECT Name,Qty_Make,cycle_time,SUM(build_percent/100 *Qty_Make) AS build_percent,Stations,description,Part_No,Duration,Prod_Order_No,batch_no,Code,Act_Start,Act_End,remarks,product FROM prod_dtr WHERE DATE BETWEEN '$datefrom' AND '$dateto' AND Qty_Make > 0 AND product = 'PNP' AND Emp_ID NOT IN ('4444','11451') AND Labor_Type != 'Prod_Reg_ID' GROUP BY Name,description ORDER BY Name ASC");
+                    $pnp_sql_data = mysqli_query($conn, "SELECT Name,Qty_Make,SUM(cycle_time*Qty_Make)AS cycle_time,SUM(build_percent/100 *Qty_Make) AS build_percent,Stations,description,Part_No,Duration,Prod_Order_No,batch_no,Code,Act_Start,Act_End,remarks,product FROM prod_dtr WHERE DATE BETWEEN '$datefrom' AND '$dateto' AND Qty_Make > 0 AND product = 'PNP' AND Emp_ID NOT IN ('4444','11451','12444') AND Labor_Type != 'Prod_Reg_ID' GROUP BY Name,description ORDER BY Name ASC");
 
                     $array1 = []; // Array to store cycle time values
                     $array2 = []; // Array to store build percent values
@@ -113,7 +113,7 @@
 
                         $PNP_STDxOUTPUT;
                         $PNP_WHxMP = 8 * $total_hc_pnp;
-                        $PNP_TOTALEFF = $PNP_WHxMP != 0 ? number_format(($PNP_STDxOUTPUT / $PNP_WHxMP) * 100, 2) : 0;
+                        $PNP_TOTALEFF = $PNP_WHxMP != 0 ? round(($PNP_STDxOUTPUT / $PNP_WHxMP) * 100) : 0;
 
                         $result_pnp[] = [
                             'PNP_WHxMP' => $PNP_WHxMP,
@@ -137,7 +137,7 @@
                     $total_headcount = $hc_row['total_headcount'];
 
                     // QUERY FOR EMPLOYEES
-                    $wosql_data = mysqli_query($conn, "SELECT dtr.Name, dtr.Qty_Make,dtr.cycle_time AS cycle_time,SUM(dtr.build_percent/100) as build_percent,dtr.Stations,dtr.description,dtr.Part_No,(dtr.Duration/60) AS Duration,dtr.Prod_Order_No,dtr.batch_no,dtr.Code,dtr.Act_Start,dtr.Act_End,dtr.remarks,dtr.product,module.build_percent AS module_build_percent FROM prod_dtr AS dtr LEFT JOIN prod_module AS module ON dtr.description = module.description AND dtr.batch_no = module.batch_no WHERE dtr.DATE BETWEEN '$datefrom' AND '$dateto' AND dtr.Qty_Make > 0 AND dtr.product IN ('JLP','PNP') AND dtr.wo_status!='INDIRECT' AND dtr.Department IN ('Production Main','Prod Main') AND dtr.Emp_ID NOT IN ('4444','11451') AND dtr.Labor_Type != 'Prod_Reg_ID' GROUP BY dtr.Name, dtr.description, dtr.batch_no,dtr.Activity ORDER BY dtr.Name ASC;");
+                    $wosql_data = mysqli_query($conn, "SELECT dtr.Name, SUM(dtr.Qty_Make) AS Qty_Make,dtr.cycle_time AS cycle_time,SUM(dtr.build_percent/100*dtr.Qty_Make) as build_percent,dtr.Stations,dtr.description,dtr.Part_No,(dtr.Duration/60) AS Duration,dtr.Prod_Order_No,dtr.batch_no,dtr.Code,dtr.Act_Start,dtr.Act_End,dtr.remarks,dtr.product,module.build_percent AS module_build_percent FROM prod_dtr AS dtr LEFT JOIN prod_module AS module ON dtr.description = module.description AND dtr.batch_no = module.batch_no AND dtr.module_id = module.ID WHERE dtr.DATE BETWEEN '$datefrom' AND '$dateto' AND dtr.Qty_Make > 0 AND dtr.product IN ('JLP','PNP') AND dtr.wo_status!='INDIRECT' AND dtr.Department IN ('Production Main','Prod Main') AND dtr.Emp_ID NOT IN ('4444','11451','12444') AND dtr.Labor_Type != 'Prod_Reg_ID' GROUP BY dtr.Name,dtr.description, dtr.batch_no,dtr.module_id,dtr.Activity ORDER BY dtr.Name ASC;");
 
                     $stmt = mysqli_prepare($conn, "SELECT description FROM bom WHERE prod_type=? AND description!='INDIRECT ACTIVITY' AND level='1'");
                     mysqli_stmt_bind_param($stmt, "s", $prodType);
@@ -244,7 +244,7 @@
                         $std_status = number_format(8 / $detailed_std, 2);
                         $detailed_actual = $detailed_duration != 0 ? number_format($detailed_duration, 2) : 0;
                         $detailed_output = $output != 0 ? $output : 0;
-                        $detailed_eff = $detailed_output != 0 ? number_format(($detailed_std * $detailed_output) / 8 * 100, 2) : 0;
+                        $detailed_eff = $detailed_output != 0 ? round(($detailed_std * $detailed_output) / 8 * 100) : 0;
 
                         // Sum $detailed_eff for each unique name
                         if (!isset($sum_detailed_eff[$name])) {
