@@ -18,17 +18,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $act_end = $_POST['act_end'];
         $wo_status = $_POST['wo_status'];
         $build_percent = $_POST['build_percent'];
+        $output = $_POST['output'];
         $duration = $_POST['duration'];
         $cycletime = $_POST['std'];
         $remarks = $_POST['remarks'];
         $id = $_POST['id'];
         $activity = $_POST['activity'];
 
-        $sql = "UPDATE `prod_dtr` SET `DATE`= ?, `Part_No`= ? , `Stations`= ?,`description`= ?, `Prod_Order_No`= ?, `batch_no`= ?,`Name`= ?,`Emp_ID`= ?,`Code`= ?,`Act_Start`= ?,`Act_End`= ?,`wo_status`= ?,`build_percent`= ?,`Duration`= ?,`cycle_time`= ?,`remarks`= ?, Activity= ? WHERE ID= ? ";
+        $sql = "UPDATE `prod_dtr` SET `DATE`= ?, `Part_No`= ? , `Stations`= ?,`description`= ?, `Prod_Order_No`= ?, `batch_no`= ?,`Name`= ?,`Emp_ID`= ?,`Code`= ?,`Act_Start`= ?,`Act_End`= ?,`wo_status`= ?,`build_percent`= ?,`output`= ?,`Duration`= ?,`cycle_time`= ?,`remarks`= ?, Activity= ? WHERE ID= ? ";
         $stmt = mysqli_prepare($conn, $sql);
 
         if ($stmt) {
-            mysqli_stmt_bind_param($stmt, 'sssssssssssssssssi', $date, $part_no, $stations, $description, $prod_no, $batch_no, $name, $emp_id, $act_code, $act_start, $act_end, $wo_status, $build_percent, $duration, $cycletime, $remarks, $activity, $id);
+            mysqli_stmt_bind_param($stmt, 'ssssssssssssssssssi', $date, $part_no, $stations, $description, $prod_no, $batch_no, $name, $emp_id, $act_code, $act_start, $act_end, $wo_status, $build_percent, $output, $duration, $cycletime, $remarks, $activity, $id);
             $result = mysqli_stmt_execute($stmt);
 
             if ($result) {

@@ -232,6 +232,7 @@
                 $('#Act_EndedField').val(rowData.Act_End);
                 $('#wo_statusField').val(rowData.wo_status);
                 $('#build_percentField').val(rowData.build_percent);
+                $('#outputField').val(rowData.output);
                 $('#durationField').val(rowData.Duration);
                 $('#StdField').val(rowData.cycle_time);
                 $('#remarksField').val(rowData.remarks);
@@ -256,6 +257,7 @@
                 var updateEnd = $('#Act_EndedField').val();
                 var updateWo = $('#wo_statusField').val();
                 var updateBuild = $('#build_percentField').val();
+                var updateOutput = $('#outputField').val();
                 var updateDuration = $('#durationField').val();
                 var updateStd = $('#StdField').val();
                 var updateRemarks = $('#remarksField').val();
@@ -279,6 +281,7 @@
                         act_end: updateEnd,
                         wo_status: updateWo,
                         build_percent: updateBuild,
+                        output: updateOutput,
                         duration: updateDuration,
                         std: updateStd,
                         remarks: updateRemarks,
@@ -884,7 +887,11 @@
                         </div>
                         <div class="col-sm form-floating">
                             <input type="number" class="form-select" id="build_percentField" name="build_percent">
-                            <label for="build_percentField">Build % / Output</label>
+                            <label for="build_percentField">Build %</label>
+                        </div>
+                        <div class="col-sm form-floating">
+                            <input type="number" class="form-select" id="outputField" name="output">
+                            <label for="outputField">Output</label>
                         </div>
                         <div class="col-sm form-floating">
                             <input type="number" class="form-control" id="durationField" name="duration" required>
