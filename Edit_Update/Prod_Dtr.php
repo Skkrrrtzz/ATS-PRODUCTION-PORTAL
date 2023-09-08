@@ -862,6 +862,7 @@
                                 <option value="FVI MODULE">FVI MODULE</option>
                                 <option value="OQA FAC">OQA FAC</option>
                                 <option value="FINAL INT">FINAL INT</option>
+                                <option value="FINAL INTEGRATION">FINAL INTEGRATION</option>
                                 <option value="FINAL TEST">FINAL TEST</option>
                                 <option value="PRE ATP">PRE ATP</option>
                                 <option value="ALIGNMENT">ALIGNMENT</option>

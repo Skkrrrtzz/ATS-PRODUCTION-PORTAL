@@ -130,7 +130,16 @@ $pw = $_SESSION['password'];
                     <li><a class="dropdown-item" href="/ATS/ATSPROD_PORTAL/PROD_profile.php?linkTitle=Profile"> <i class="fa fa-user"></i> Profile</a></li>
                     <?php if ($position === "Admin" && $role === "cable_supervisor") { ?>
                         <li><a class="dropdown-item" href="/ATS/ATSPROD_PORTAL/Users_Admin.php?linkTitle=Authorized Users"><i class="fa-solid fa-user-secret"></i> Users Administrator</a></li>
-                    <?php } ?>
+                    <?php } else { ?>
+                        <div class="container-fluid">
+                            <!-- 404 Error Text -->
+                            <div class="text-center">
+                                <div class="error mx-auto" data-text="404">404</div>
+                                <p class="lead text-gray-800 mb-5">Page Not Found</p>
+                                <a href="/ATS/ATSPROD_PORTAL/ATS_Prod_Home.php">&larr; Back to Login Page</a>
+                            </div>
+                        </div>
+                    <?php  } ?>
                     <li>
                         <hr class="dropdown-divider">
                     </li>

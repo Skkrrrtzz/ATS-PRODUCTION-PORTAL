@@ -15,11 +15,12 @@ if (isset($_POST['login_prod'])) {
     $password = $_POST['prod_pw'];
 
     // Perform any necessary validation and sanitization of the username and password here
-    $sql = "SELECT * FROM user WHERE username = ? AND department = ?";
+    $sql = "SELECT * FROM user WHERE username = ? AND department IN (?, ?);";
     $stmt = $conn->prepare($sql);
-    $department = 'Production Main'; // Hardcoded department
+    $prod = 'Production Main'; // Hardcoded department
+    $ppic = 'DPIC';
     // $role = "cable_supervisor";
-    $stmt->bind_param("ss", $username, $department);
+    $stmt->bind_param("sss", $username, $prod, $ppic);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -92,6 +93,9 @@ if (isset($_POST['login_prod'])) {
             if ($_SESSION['role'] === "cable_supervisor") {
                 // You can redirect the user to another page or perform any other desired actions
                 header('location: ATS_Production_Portal.php');
+                exit();
+            } else if ($_SESSION['role'] === "planner") {
+                header('location: /ATS/ATSPPIC_PORTAL/sb-admin/ppic_dashboard.php');
                 exit();
             } else {
                 // You can redirect the user to another page or perform any other desired actions

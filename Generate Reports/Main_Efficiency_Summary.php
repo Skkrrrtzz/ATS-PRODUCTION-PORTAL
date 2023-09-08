@@ -40,7 +40,7 @@
                     $total_hc_jlp = $jlp_hc_row['total_headcount'];
 
                     // QUERY FOR EMPLOYEES
-                    $jlp_sql_data = mysqli_query($conn, "SELECT Name,Qty_Make,cycle_time,SUM(build_percent/100 *Qty_Make) AS build_percent,Stations,Activity,description,Part_No,Duration,Prod_Order_No,batch_no,Code,Act_Start,Act_End,remarks,product FROM prod_dtr WHERE DATE BETWEEN '$datefrom' AND '$dateto' AND Qty_Make > 0 AND product = 'JLP' AND Emp_ID NOT IN ('11451','4444','12444','11448') AND Act_End != '' AND Labor_Type != 'Prod_Reg_ID' GROUP BY Name,description,Activity ORDER BY Name ASC");
+                    $jlp_sql_data = mysqli_query($conn, "SELECT Name,Qty_Make,cycle_time,SUM(build_percent/100 *Qty_Make) AS build_percent,output,Stations,Activity,description,Part_No,Duration,Prod_Order_No,batch_no,Code,Act_Start,Act_End,remarks,product FROM prod_dtr WHERE DATE BETWEEN '$datefrom' AND '$dateto' AND Qty_Make > 0 AND product = 'JLP' AND Emp_ID NOT IN ('11451','4444','12444','11448') AND Labor_Type != 'Prod_Reg_ID' GROUP BY Name,description,Activity ORDER BY Name ASC");
 
                     $array1 = []; // Array to store cycle time values
                     $array2 = []; // Array to store build percent values
@@ -51,7 +51,8 @@
                         $jlp_stations = $jlp_row['Stations'];
                         $jlp = $jlp_row['product'];
                         $jlp_bp = number_format($jlp_row['build_percent'], 2);
-                        $jlp_output = $jlp_bp;
+                        $jlp_new_output = $jlp_row['output'];
+                        $jlp_output = $jlp_bp + $jlp_new_output;
 
                         if ($jlp_stations == 'FVI MODULE') {
                             $std_cycle_time = "3.00";
@@ -87,12 +88,12 @@
                     }
                     $result[] = $result_jlp;
                     // QUERY FOR HEADCOUNT
-                    $pnp_hc_sql = mysqli_query($conn, "SELECT COUNT(DISTINCT Name) AS total_headcount FROM prod_dtr WHERE Department = 'Prod Main' AND Name != 'TECHNICIAN' AND product='PNP' AND description != 'INDIRECT ACTIVITY' AND Emp_ID NOT IN ('11451','12444','11448') AND DATE BETWEEN '$datefrom' AND '$dateto'");
+                    $pnp_hc_sql = mysqli_query($conn, "SELECT COUNT(DISTINCT Name) AS total_headcount FROM prod_dtr WHERE Department = 'Prod Main' AND Name != 'TECHNICIAN' AND product IN ('PNP','PNP IO') AND description != 'INDIRECT ACTIVITY' AND Emp_ID NOT IN ('11451','12444','11448') AND DATE BETWEEN '$datefrom' AND '$dateto'");
                     $pnp_hc_row = mysqli_fetch_assoc($pnp_hc_sql);
                     $total_hc_pnp = $pnp_hc_row['total_headcount'];
 
                     // QUERY FOR EMPLOYEES
-                    $pnp_sql_data = mysqli_query($conn, "SELECT Name,Qty_Make,SUM(cycle_time*Qty_Make)AS cycle_time,SUM(build_percent/100 *Qty_Make) AS build_percent,Stations,description,Part_No,Duration,Prod_Order_No,batch_no,Code,Act_Start,Act_End,remarks,product FROM prod_dtr WHERE DATE BETWEEN '$datefrom' AND '$dateto' AND Qty_Make > 0 AND product = 'PNP' AND Emp_ID NOT IN ('4444','11451','12444','11448') AND Labor_Type != 'Prod_Reg_ID' GROUP BY Name,description ORDER BY Name ASC");
+                    $pnp_sql_data = mysqli_query($conn, "SELECT Name,Qty_Make,SUM(cycle_time*Qty_Make)AS cycle_time,SUM(build_percent/100 *Qty_Make) AS build_percent,output,Stations,description,Part_No,Duration,Prod_Order_No,batch_no,Code,Act_Start,Act_End,remarks,product FROM prod_dtr WHERE DATE BETWEEN '$datefrom' AND '$dateto' AND Qty_Make > 0 AND product = 'PNP' AND Emp_ID NOT IN ('4444','11451','12444','11448') AND Labor_Type != 'Prod_Reg_ID' GROUP BY Name,description ORDER BY Name ASC");
 
                     $array1 = []; // Array to store cycle time values
                     $array2 = []; // Array to store build percent values
@@ -101,7 +102,7 @@
                     while ($pnp_row = mysqli_fetch_array($pnp_sql_data)) {
 
                         $pnp_std = $pnp_row['cycle_time'];
-                        $pnp_bp = $pnp_row['build_percent'];
+                        $pnp_bp = $pnp_row['build_percent'] + $pnp_row['output'];
                         $pnp = $pnp_row['product'];
 
                         $array1[] = $pnp_std;
@@ -137,7 +138,7 @@
                     $total_headcount = $hc_row['total_headcount'];
 
                     // QUERY FOR EMPLOYEES
-                    $wosql_data = mysqli_query($conn, "SELECT dtr.Name, SUM(dtr.Qty_Make) AS Qty_Make,dtr.cycle_time AS cycle_time,SUM(dtr.build_percent/100*dtr.Qty_Make) as build_percent,dtr.output,dtr.Stations,dtr.description,dtr.Part_No,(dtr.Duration/60) AS Duration,dtr.Prod_Order_No,dtr.batch_no,dtr.Code,dtr.Act_Start,dtr.Act_End,dtr.remarks,dtr.product,module.build_percent AS module_build_percent FROM prod_dtr AS dtr LEFT JOIN prod_module AS module ON dtr.description = module.description AND dtr.batch_no = module.batch_no AND dtr.module_id = module.ID WHERE dtr.DATE BETWEEN '$datefrom' AND '$dateto' AND dtr.Qty_Make > 0 AND dtr.product IN ('JLP','PNP') AND dtr.wo_status!='INDIRECT' AND dtr.Department IN ('Production Main','Prod Main') AND dtr.Emp_ID NOT IN ('4444','11451','12444','11448') AND dtr.Labor_Type != 'Prod_Reg_ID' GROUP BY dtr.Name,dtr.description, dtr.batch_no,dtr.module_id,dtr.Activity ORDER BY dtr.Name ASC;");
+                    $wosql_data = mysqli_query($conn, "SELECT dtr.Name, SUM(dtr.Qty_Make) AS Qty_Make,dtr.cycle_time AS cycle_time,SUM(dtr.build_percent/100*dtr.Qty_Make) as build_percent,dtr.output,dtr.Stations,dtr.description,dtr.Part_No,(dtr.Duration/60) AS Duration,dtr.Prod_Order_No,dtr.batch_no,dtr.Code,dtr.Act_Start,dtr.Act_End,dtr.remarks,dtr.product,module.build_percent AS module_build_percent FROM prod_dtr AS dtr LEFT JOIN prod_module AS module ON dtr.description = module.description AND dtr.batch_no = module.batch_no AND dtr.module_id = module.ID WHERE dtr.DATE BETWEEN '$datefrom' AND '$dateto' AND dtr.Qty_Make > 0 AND dtr.product IN ('JLP','PNP','PNP IO') AND dtr.wo_status!='INDIRECT' AND dtr.Department IN ('Production Main','Prod Main') AND dtr.Emp_ID NOT IN ('4444','11451','12444','11448') AND dtr.Labor_Type != 'Prod_Reg_ID' GROUP BY dtr.Name,dtr.description, dtr.batch_no,dtr.module_id,dtr.Activity ORDER BY dtr.Name ASC;");
 
                     $stmt = mysqli_prepare($conn, "SELECT description FROM bom WHERE prod_type=? AND description!='INDIRECT ACTIVITY' AND level='1'");
                     mysqli_stmt_bind_param($stmt, "s", $prodType);
@@ -300,6 +301,7 @@
                         $results[] = [
                             'name' => $name,
                             'sum_detailed_eff' => $sum_eff,
+                            'new_product' => $product,
                             'output' => isset($sum_detailed_output[$name]) ? $sum_detailed_output[$name] : null
                         ];
                     }
@@ -396,7 +398,6 @@
                                         <tr>
                                             <th>Name</th>
                                             <th>Output</th>
-                                            <!-- <th>Std</th> -->
                                             <th>Efficiency</th>
                                         </tr>
                                     </thead>
@@ -409,7 +410,6 @@
                                                 <tr class="text-center">
                                                     <td><?php echo $result['name']; ?></td>
                                                     <td><?php echo $result['output']; ?></td>
-                                                    <!-- <td><?php echo number_format($result['std_status'], 2); ?></td> -->
                                                     <td class="text-primary fw-bolder"><?php echo round($result['sum_detailed_eff']); ?>%</td>
                                                 </tr>
                                         <?php
@@ -482,7 +482,7 @@
                             </h2>
                             <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
                                 <div class="accordion-body">
-                                    <table class="table table-sm table-hover table-bordered display compact mt-3 fs-6" id="table5">
+                                    <table class="table table-sm table-hover table-striped table-bordered display compact mt-3 fs-6" id="table5">
                                         <thead class="table-secondary">
                                             <tr>
                                                 <td colspan="32" class="text-dark bg-light">

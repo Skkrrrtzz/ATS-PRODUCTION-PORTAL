@@ -1,5 +1,21 @@
-<?php include 'ATS_Prod_Header.php' ?>
-<?php include 'PROD_navbar.php' ?>
+<?php
+include 'ATS_Prod_Header.php';
+include 'PROD_navbar.php';
+
+if ($role !== 'cable_supervisor') {
+    echo '
+    <div class="container-fluid">
+    <!-- 404 Error Text -->
+    <div class="text-center">
+      <div class="error mx-auto" data-text="404">404</div>
+      <p class="lead text-gray-800 mb-5">Page Not Found</p>
+        <a href="/ATS/ATSPROD_PORTAL/ATS_Prod_Home.php">&larr; Back to Dashboard</a>
+    </div>
+  </div>';
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -102,6 +118,7 @@
                     extend: 'pdfHtml5',
                     text: '<i class="fa-solid fa-file-pdf"></i> PDF',
                     className: 'btn btn-danger btn-sm',
+                    orientation: 'landscape',
                     init: function(api, node, config) {
                         $(node).removeClass('dt-button');
                     }
